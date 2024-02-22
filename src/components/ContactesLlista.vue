@@ -51,8 +51,8 @@
                 class="btn btn-outline-info"
                 @click="
                   this.$router.push({
-                    path: `/editaempresa/${empresa.NIF}`,
-                    params: { nif: empresa.NIF },
+                    path: `/editacontacte/${contacte.id}`,
+                    params: { id: contacte.id },
                   })
                 "
               >

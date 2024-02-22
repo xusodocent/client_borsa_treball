@@ -23,6 +23,7 @@ import AlumneFitxa from '../components/fitxes/fitxaAlumne.vue'
 
 import EditaEmpresa from '../components/formularis/editempresaForm.vue'
 import EditaAlumne from '../components/formularis/editAlumneForm.vue'
+import EditaContacte from '../components/formularis/editContacteForm.vue'
 
 
 const routes = [
@@ -174,6 +175,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: EditaAlumne,
+  },
+  {
+    path: '/editacontacte/:id',
+    name: 'editacontactee',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: EditaContacte,
   }
 ]
 

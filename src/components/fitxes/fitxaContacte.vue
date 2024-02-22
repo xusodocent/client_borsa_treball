@@ -37,8 +37,8 @@
         </tbody>
       </table>
     </div>
-    <button class="btn btn-dark" @click="this.$router.push('/novaempresa')">
-      <i class="fa-solid fa-plus"></i>Nova empresa
+    <button class="btn btn-dark" @click="this.$router.push('/contactes')">
+      <i class="fa-solid fa-list"></i>Llista de Contactes
     </button>
   </div>
 </template>

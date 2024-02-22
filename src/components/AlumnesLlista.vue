@@ -5,8 +5,8 @@
     <br>
     <input type="text" v-model="filtro" placeholder="Buscar per cognom..." />
     <input type="text" v-model="filtroPoble" placeholder="Buscar per poble..." />
-  <br /><br />
-  <div id="tabla-personas">
+    <br /><br />
+    <div id="tabla-personas">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -24,55 +24,39 @@
             <td>{{ alumne.cognoms }}</td>
             <td>{{ alumne.poblacio }}</td>
             <td>
-              <button
-              type="button"
-              class="btn btn-outline-success"
-              @click="
+              <button type="button" class="btn btn-outline-success" @click="
                 this.$router.push({
                   path: `/alumnefitxa/${alumne.id}`,
                   params: { id: alumne.id },
                 })
-              "
-            >
-              <i class="fa-regular fa-eye"></i>
-              Veure
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger"
-              @click="deleteAlumne(alumne.id)"
-            >
-              <i class="fa-regular fa-trash-can"></i>Eliminar
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-info"
-              @click="
+                ">
+                <i class="fa-regular fa-eye"></i>
+                Veure
+              </button>
+              <button type="button" class="btn btn-outline-danger" @click="deleteAlumne(alumne.id)">
+                <i class="fa-regular fa-trash-can"></i>Eliminar
+              </button>
+              <button type="button" class="btn btn-outline-info" @click="
                 this.$router.push({
                   path: `/editaalumne/${alumne.id}`,
                   params: { id: alumne.id },
                 })
-              "
-            >
-              <i class="fa-solid fa-file-pen"></i>
-              Modificar
-            </button>
+                ">
+                <i class="fa-solid fa-file-pen"></i>
+                Modificar
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
       <br>
-  <button
-    class="btn btn-dark"
-    @click="this.$router.push('/noualumne')"
-  >
-    <i class="fa-solid fa-plus"></i>Nou alumne
-  </button>
+      <button class="btn btn-dark" @click="this.$router.push('/noualumne')">
+        <i class="fa-solid fa-plus"></i>Nou alumne
+      </button>
+    </div>
+    <div v-if="eliminat_ok" class="alert alert-success">S'ha eliminat correctament l'alumne</div>
+    <div v-if="eliminat_error" class="alert alert-danger">Errada eliminant alumnes</div>
   </div>
-  <div v-if="eliminat_ok" class="alert alert-success">S'ha eliminat correctament l'alumne</div>
-  <div v-if="eliminat_error" class="alert alert-danger">Errada eliminant alumnes</div>
-  </div>
-  
 </template>
 
 <script>
@@ -82,12 +66,12 @@ export default {
     //msg: String
     base_url: String,
   },
-  data(){
-    return{
+  data() {
+    return {
       filtro: "",
       filtroPoble: "",
-      eliminat_ok:false,
-      eliminat_error:false,
+      eliminat_ok: false,
+      eliminat_error: false,
       alumnes: [{
         id: 1,
         nomalumne: "Fidel",
@@ -119,7 +103,7 @@ export default {
       }],
     }
   },
-  methods:{
+  methods: {
     async getAlumnes() {
       let url = this.base_url + "/api/alumne/";
       try {
@@ -145,9 +129,9 @@ export default {
         this.resposta = await response.json();
         //this.empreses = this.resposta.empreses;
         //await console.log(this.empreses);
-        if(this.resposta.ok==true){
+        if (this.resposta.ok == true) {
           this.eliminat_ok = true;
-          
+
         }
         await alert("Alumne eliminat");
         this.getAlumnes();
@@ -157,17 +141,17 @@ export default {
       }
     },
   },
-  mounted(){
+  mounted() {
     this.getAlumnes();
   },
-  computed:{
+  computed: {
     alumnesFiltrats() {
       return this.alumnes.filter(item => {
         return item.cognoms.toLowerCase().includes(this.filtro.toLowerCase()) && item.poblacio.toLowerCase().includes(this.filtroPoble.toLowerCase());
       });
     },
   }
-  
+
 };
 </script>
 

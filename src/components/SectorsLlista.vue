@@ -14,22 +14,20 @@
           <td>{{ sector.id }}</td>
           <td>{{ sector.nomsector }}</td>
           <td>
-            <button
-              type="button"
-              class="btn btn-outline-danger"
-              @click="this.deleteSector(sector.id)"
-            >
+            <button type="button" class="btn btn-outline-danger" @click="this.deleteSector(sector.id)">
               <i class="fa-regular fa-trash-can"></i>Eliminar
             </button>
           </td>
         </tr>
       </tbody>
     </table>
+    <br />
+    <button class="btn btn-dark" @click="this.$router.push('/nousector')">
+      <i class="fa-solid fa-plus"></i>Nou sector
+    </button>
+    <div v-if="eliminat_ok" class="alert alert-success">S'ha eliminat correctament el sector</div>
+    <div v-if="eliminat_error" class="alert alert-danger">Errada eliminant sectors</div>
   </div>
-  <br />
-  <button class="btn btn-dark" @click="this.$router.push('/nousector')">
-    <i class="fa-solid fa-plus"></i>Nou sector
-  </button>
 </template>
 
 <script>
@@ -41,6 +39,8 @@ export default {
   },
   data() {
     return {
+      eliminat_ok: false,
+      eliminat_error: false,
       sectors: [
         {
           id: 1,
@@ -68,6 +68,8 @@ export default {
       }
     },
     async deleteSector(id) {
+      this.eliminat_ok = false;
+      this.eliminat_error = false;
       let url = this.base_url + "/api/sector/" + id;
       try {
         const response = await fetch(/*`http://10.2.0.126/api/empresa/${nif}`*/url, {
@@ -76,15 +78,21 @@ export default {
         this.resposta = await response.json();
         //this.empreses = this.resposta.empreses;
         //await console.log(this.empreses);
-        await alert("Sector eliminat");
+        //await alert("Sector eliminat");
+        if (this.resposta.ok == true) {
+          this.eliminat_ok = true;
+        } 
         this.getSectors();
       } catch (error) {
+        this.eliminat_error = true;
         console.error(error);
       }
     },
   },
-  mounted(){
+  mounted() {
     this.getSectors();
+    this.eliminat_ok = false;
+    this.eliminat_error = false;
   }
 };
 </script>

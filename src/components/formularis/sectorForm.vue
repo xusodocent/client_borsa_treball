@@ -27,6 +27,8 @@
         </button>
       </div>
     </form>
+    <div v-if="afegit_ok" class="alert alert-success">S'ha afegit correctament el sector</div>
+    <div v-if="afegit_error" class="alert alert-danger">Errada afegint sectors</div>
   </div>
 </template>
 
@@ -45,10 +47,14 @@ export default {
       },
       validat: false,
       enviat: false,
+      afegit_ok: false,
+      afegit_error: false,
     };
   },
   methods: {
     async postSector() {
+      this.afegit_ok = false;
+      this.afegit_error = false;
       let url = this.base_url + "/api/sector/";
       await console.log(JSON.stringify(this.nouSector));
       try {
@@ -60,9 +66,13 @@ export default {
         this.resposta = await response.json();
         //this.empreses = this.resposta.empreses;
         //await console.log(this.empreses);
-        this.enviament_ok = await this.resposta.ok;
-        await alert("La resposta del servidor és: " + this.resposta.error);
+        //this.enviament_ok = await this.resposta.ok;
+        if (this.resposta.ok == true){
+          this.afegit_ok = true;
+        }
+        //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
+        this.afegit_error = true;
         console.error(error);
       }
     },

@@ -8,7 +8,7 @@ export default {
   },
   data(){
     return{
-      base_url: "http://10.2.0.102",
+      base_url: "http://192.168.172.73",
     }
   }
 }
