@@ -3,7 +3,8 @@
   <div class="container">
     <h1 class="text-center text-muted">Empreses</h1>
     <br />
-    <input type="text" v-model="filtro" placeholder="Buscar..." />
+    <input type="text" v-model="filtro" placeholder="Buscar per empresa..." id="buscarEmpresa"/>
+    <input type="text" v-model="filtroPoble" placeholder="Buscar per poble..." id="buscarPoble"/>
     <br><br>
     <button class="btn btn-dark" @click="this.$router.push('/novaempresa')">
       <i class="fa-solid fa-plus"></i>Nova empresa
@@ -83,6 +84,7 @@ export default {
     return {
       resposta: "",
       filtro:"",
+      filtroPoble: "",
 
       empreses: [
         {
@@ -155,7 +157,7 @@ export default {
   computed:{
     empresesFiltrades() {
       return this.empreses.filter(item => {
-        return item.nom.toLowerCase().includes(this.filtro.toLowerCase());
+        return item.nom.toLowerCase().includes(this.filtro.toLowerCase()) && item.poblacio.toLowerCase().includes(this.filtroPoble.toLowerCase());
       });
     },
   }

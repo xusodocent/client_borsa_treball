@@ -3,7 +3,8 @@
   <div class="container">
     <h1>Contactes</h1>
     <br />
-    <input type="text" v-model="filtro" placeholder="Buscar..." />
+    <input type="text" v-model="filtro" placeholder="Buscar per nom..." />
+    <input type="text" v-model="filtroEmpresa" placeholder="Buscar per empresa..." />
     <br><br>
     <button class="btn btn-dark" @click="this.$router.push('/noucontacte')">
       <i class="fa-solid fa-plus"></i>Nou contacte
@@ -80,6 +81,7 @@ export default {
   data() {
     return {
       filtro:"",
+      filtroEmpresa:"",
       contactes: [
         {
           id: 4,
@@ -143,7 +145,7 @@ export default {
   computed:{
     contactesFiltrats() {
       return this.contactes.filter(item => {
-        return item.nomcontacte.toLowerCase().includes(this.filtro.toLowerCase());
+        return item.nomcontacte.toLowerCase().includes(this.filtro.toLowerCase()) && item.empresa.nomempresa.toLowerCase().includes(this.filtroEmpresa.toLowerCase());
       });
     },
   }

@@ -2,6 +2,9 @@
 <template>
   <div class="container">
     <h1>Alumnes</h1>
+    <br>
+    <input type="text" v-model="filtro" placeholder="Buscar per cognom..." />
+    <input type="text" v-model="filtroPoble" placeholder="Buscar per poble..." />
   <br /><br />
   <div id="tabla-personas">
       <table class="table table-striped">
@@ -15,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="alumne in alumnes" :key="alumne.id">
+          <tr v-for="alumne in alumnesFiltrats" :key="alumne.id">
             <td>{{ alumne.id }}</td>
             <td>{{ alumne.nomalumne }}</td>
             <td>{{ alumne.cognoms }}</td>
@@ -81,6 +84,8 @@ export default {
   },
   data(){
     return{
+      filtro: "",
+      filtroPoble: "",
       eliminat_ok:false,
       eliminat_error:false,
       alumnes: [{
@@ -154,6 +159,13 @@ export default {
   },
   mounted(){
     this.getAlumnes();
+  },
+  computed:{
+    alumnesFiltrats() {
+      return this.alumnes.filter(item => {
+        return item.cognoms.toLowerCase().includes(this.filtro.toLowerCase()) && item.poblacio.toLowerCase().includes(this.filtroPoble.toLowerCase());
+      });
+    },
   }
   
 };
