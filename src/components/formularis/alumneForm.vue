@@ -2,7 +2,7 @@
 <template>
   <h1>Dades Alumne</h1>
   <div class="container">
-    <form>
+    <form @submit.prevent="this.postAlumne()">
       <div class="row align-items-start">
         <div class="col-lg-6 col-sm-12">
           <label for="nombre" class="form-label">Nom</label>
@@ -57,13 +57,13 @@
         </div>
         <div class="col-lg-6 col-sm-12">
           <label for="pdf" class="form-label">Currículum</label>
-          <input type="file" class="form-control" id="pdf" required />
+          <input type="file" class="form-control" id="pdf" />
         </div>
         
       </div>
       <div class="col">
         <br /><br />
-        <button type="submit" class="btn btn-outline-success" @click="this.postAlumne()">
+        <button type="submit" class="btn btn-outline-success" :disabled="!validat">
           <i class="fa-regular fa-floppy-disk"></i>Afegir
         </button>
         <button
@@ -73,6 +73,9 @@
           <i class="fa-solid fa-xmark"></i>Cancelar
         </button>
       </div>
+      <div class="alert alert-warning" v-if="!validat">Tots els camps són obligatoris</div>
+      <div class="alert alert-success" v-if="enviament_ok">Alumne afegit correctament</div>
+      <div v-if="enviament_ok"><button type="button" class="btn btn-info" @click="this.$router.push('/alumnes')">Veure</button></div>
     </form>
   </div>
 </template>
@@ -105,8 +108,8 @@ export default {
        
       ],
       selectedCicles: [],
-      validat: false,
-      enviat: false,
+      //validat: false,
+      enviament_ok: false,
     };
   },
   methods: {
@@ -141,6 +144,20 @@ export default {
   },
   mounted(){
     this.getCicles();
+  },
+  computed:{
+    //haz que todos los campos sean obligatorios
+    //si no se han rellenado todos los campos
+    //no se puede enviar el formulario
+    validat(){
+      //comprova que el mail siga vàlid
+      //https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+      function validateEmail(email) {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+      }                
+      return this.nouAlumne.nomalumne && this.nouAlumne.cognoms && this.nouAlumne.poblacio && this.nouAlumne.telefon && validateEmail(this.nouAlumne.email) && this.nouAlumne.idiomes && this.nouAlumne.estudis && this.nouAlumne.competencies && this.nouAlumne.cicles;
+    }
   }
 };
 </script>

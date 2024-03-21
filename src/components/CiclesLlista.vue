@@ -20,38 +20,12 @@
             <td>{{ cicle.nomcicle }}</td>
             <td>{{ cicle.graucicle }}</td>
             <td>
-              <button
-              type="button"
-              class="btn btn-outline-success"
-              @click="
-                this.$router.push({
-                  path: `/ciclefitxa/${cicle.id}`,
-                  params: { id: cicle.id },
-                })
-              "
-            >
-              <i class="fa-regular fa-eye"></i>
-              Veure
-            </button>
             <button
               type="button"
               class="btn btn-outline-danger"
               @click="deleteCicle(cicle.id)"
             >
               <i class="fa-regular fa-trash-can"></i>Eliminar
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-info"
-              @click="
-                this.$router.push({
-                  path: `/editacicle/${cicle.id}`,
-                  params: { id: cicle.id },
-                })
-              "
-            >
-              <i class="fa-solid fa-file-pen"></i>
-              Modificar
             </button>
             </td>
           </tr>

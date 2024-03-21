@@ -20,6 +20,7 @@ import OfertaForm from '../components/formularis/OfertaForm.vue'
 import EmpresaFitxa from '../components/fitxes/fitxaEmpresa.vue'
 import ContacteFitxa from '../components/fitxes/fitxaContacte.vue'
 import AlumneFitxa from '../components/fitxes/fitxaAlumne.vue'
+import OfertaFitxa from '../components/fitxes/fitxaOferta.vue'
 
 import EditaEmpresa from '../components/formularis/editempresaForm.vue'
 import EditaAlumne from '../components/formularis/editAlumneForm.vue'
@@ -159,6 +160,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: AlumneFitxa
+  },
+  {
+    path: '/ofertafitxa/:id',
+    name: 'ofertafitxa',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: OfertaFitxa
   },
   {
     path: '/editaempresa/:nif',

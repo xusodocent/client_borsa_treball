@@ -75,7 +75,8 @@ export default {
   },
   data() {
     return {
-      ofertes: [
+      ofertes: [],
+      ofertes2: [
         {
           id: 2,
           empresa: {
