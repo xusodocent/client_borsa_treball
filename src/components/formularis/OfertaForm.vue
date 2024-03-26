@@ -2,7 +2,7 @@
   <div>
     <h1>Formulari d'Oferta</h1>
 
-    <form @submit.prevent="postOferta" class="row g-3">
+    <form action="" @submit.prevent class="row g-3">
       <div class="row align-items-start">
         <div class="col-lg-6 col-sm-12">
           <label for="empresa" class="form-label">Empresa</label>
@@ -55,6 +55,8 @@
         <button class="btn btn-primary" @click="postOferta()">Enviar Oferta</button>
       </div>
     </form>
+    <div v-if="afegit_ok" class="alert alert-success">S'ha afegit correctament l'oferta</div>
+    <div v-if="afegit_error" class="alert alert-danger">Errada afegint oferta</div>
   </div>
 </template>
   
@@ -84,6 +86,8 @@ export default {
       selectedCicles: [],
       selectedEmpresa: "",
       llistaEmpreses: [],
+      afegit_ok: false,
+      afegit_error: false,
     };
   },
   methods: {
@@ -118,7 +122,8 @@ export default {
         alert("Obligatori triar empresa...");
         return;
       }
-
+      this.afegit_ok = false;
+      this.afegit_error = false;
       let url = this.base_url + "/api/oferta/";
       try {
         // Asigna directamente el valor de nomsector desde novaEmpresa
@@ -131,9 +136,17 @@ export default {
           body: JSON.stringify(this.oferta),
           headers: { "Content-type": "application/json; charset=UTF-8" },
         });
-        this.resposta = await response.json();
-        this.enviament_ok = await this.resposta.ok;
-        await alert("La resposta del servidor és: " + this.resposta.error);
+        const resposta = await response.json();
+        if(resposta.ok){
+          alert("Oferta afegida correctament");
+          this.afegit_ok = true;
+        }
+        else{
+          alert("La resposta del servidor és: " + resposta.error);
+          this.afegit_error = true;
+        }
+        //this.enviament_ok = await this.resposta.ok;
+        //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
         console.error(error);
       }

@@ -25,6 +25,7 @@ import OfertaFitxa from '../components/fitxes/fitxaOferta.vue'
 import EditaEmpresa from '../components/formularis/editempresaForm.vue'
 import EditaAlumne from '../components/formularis/editAlumneForm.vue'
 import EditaContacte from '../components/formularis/editContacteForm.vue'
+import EditaOferta from '../components/formularis/editOferta.vue'
 
 
 const routes = [
@@ -192,6 +193,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: EditaContacte,
+  },
+  {
+    path: '/editaoferta/:id',
+    name: 'editaoferta',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: EditaOferta,
   }
 ]
 

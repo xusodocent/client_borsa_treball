@@ -38,7 +38,7 @@
         </div>
         <div class="col col-md-4 col-sm-12 col-xs-12">
           <label for="sector" class="form-label">Sector</label>
-          <select class="form-select" id="sector" required v-model="novaEmpresa.idsector" @change="onChangeSector">
+          <select class="form-select" id="sector" required v-model="novaEmpresa.sector" @change="onChangeSector">
             <option value="" disabled>Selecciona un sector</option>
             <option :value="String(sector.id)" v-for="sector in sectors" :key="sector.id">{{ sector.nomsector }}</option>
           </select>
@@ -89,7 +89,7 @@ export default {
         telefon: "",
         email: "",
         web: "",
-        idsector: 1,
+        sector: 1,
         nomsector: ""
       },
       validat: false,
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     onChangeSector() {
-      console.log("Sector seleccionado:", this.novaEmpresa.idsector);
+      console.log("Sector seleccionado:", this.novaEmpresa.sector);
     },
     getNomSector(idsector) {
       // Método para obtener el nomsector correspondiente al idsector
@@ -120,7 +120,7 @@ export default {
     },
     async postEmpresa() {
       // Verifica si el idsector está presente
-      if (!this.novaEmpresa.idsector) {
+      if (!this.novaEmpresa.sector) {
         alert("Selecciona un sector antes de enviar el formulario.");
         return;
       }
@@ -128,7 +128,7 @@ export default {
       let url = this.base_url + "/api/empresa/";
       try {
         // Asigna directamente el valor de nomsector desde novaEmpresa
-        const selectedSector = this.sectors.find(sector => sector.id === parseInt(this.novaEmpresa.idsector));
+        const selectedSector = this.sectors.find(sector => sector.id === parseInt(this.novaEmpresa.sector));
         this.novaEmpresa.nomsector = selectedSector ? selectedSector.nomsector : '';
 
         await console.log(JSON.stringify(this.novaEmpresa));

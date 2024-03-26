@@ -40,7 +40,7 @@
             <button
               type="button"
               class="btn btn-outline-danger"
-              @click="deleteCicle(oferta.id)"
+              @click="deleteOferta(oferta.id)"
             >
               <i class="fa-regular fa-trash-can"></i>Eliminar
             </button>
@@ -118,6 +118,20 @@ export default {
         console.error(error);
       }
     },
+    async deleteOferta(id) {
+      let url = this.base_url + "/api/oferta/" + id;
+      try {
+        const response = await fetch(url, {
+          method: "DELETE",
+        });
+        this.resposta = await response.json();
+        await console.log(this.resposta);
+        this.getOfertes();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
   },
   mounted(){
     this.getOfertes();
