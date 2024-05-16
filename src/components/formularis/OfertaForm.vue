@@ -55,6 +55,8 @@
         <button class="btn btn-primary" @click="postOferta()">Enviar Oferta</button>
       </div>
     </form>
+    <br>
+    <br>
     <div v-if="afegit_ok" class="alert alert-success">S'ha afegit correctament l'oferta</div>
     <div v-if="afegit_error" class="alert alert-danger">Errada afegint oferta</div>
   </div>
@@ -111,6 +113,18 @@ export default {
         const response = await fetch(url);
         this.resposta = await response.json();
         this.llistaEmpreses = this.resposta.empreses;
+        this.llistaEmpreses.sort(function (a, b) {
+          var nomA = a.nom.toUpperCase(); // Converteix els noms a majúscules per assegurar una ordenació sense distinció de majúscules/minúscules
+          var nomB = b.nom.toUpperCase();
+
+          if (nomA < nomB) {
+            return -1;
+          }
+          if (nomA > nomB) {
+            return 1;
+          }
+          return 0; // En cas d'igualtat
+        });
         await console.log(this.empreses);
       } catch (error) {
         console.error(error);
@@ -148,6 +162,8 @@ export default {
         //this.enviament_ok = await this.resposta.ok;
         //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
+        alert("Error en enviar dades al servidor: " + error);
+        this.afegit_error = true;
         console.error(error);
       }
 

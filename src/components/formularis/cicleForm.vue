@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <h1>Nou cile</h1>
+  <h1>Nou cicle</h1>
   <div class="container">
     <form>
       <div class="mb-3">
@@ -45,6 +45,9 @@
           <i class="fa-solid fa-xmark"></i>Cancelar
         </button>
       </div>
+      <br>
+      <div v-if="afegit_ok" class="alert alert-success">S'ha afegit correctament el cicle</div>
+      <div v-if="afegit_error" class="alert alert-danger">Errada afegint el cicle</div>
     </form>
   </div>
 </template>
@@ -62,8 +65,10 @@ export default {
         nomcicle: "",
         graucicle: "",
       },
-      validat: false,
-      enviat: false,
+      //validat: false,
+      //enviat: false,
+      afegit_ok: false,
+      afegit_error: false,
     };
   },
   methods:{
@@ -77,11 +82,21 @@ export default {
         });
         this.resposta = await response.json();
         //this.empreses = this.resposta.empreses;
-        await console.log(this.resposta);
-        this.enviament_ok = await this.resposta.ok;
-        await alert("La resposta del servidor és: " + this.resposta.error);
+        alert("La resposta del servidor és: " + this.resposta);
+        this.afegit_ok = await this.resposta.ok;
+        if (this.afegit_ok) {
+          alert("Cicle afegit correctament");
+          this.afegit_ok = true;
+        } else {
+          alert("Error afegint el cicle: " + this.resposta.error);
+          this.afegit_error = true;
+        }
+        //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
-        console.error(error);
+        this.afegit_error = true;
+        alert("Error afegint el cicle: " + error);
+        
+        alert("afegit_error: " + this.afegit_error);
       }
     },
   }

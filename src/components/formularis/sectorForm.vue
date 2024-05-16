@@ -18,6 +18,8 @@
         </button>
       </div>
     </form>
+    <br>
+    <br>
     <div v-if="afegit_ok" class="alert alert-success">S'ha afegit correctament el sector</div>
     <div v-if="afegit_error" class="alert alert-danger">Errada afegint sectors</div>
   </div>

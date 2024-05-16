@@ -57,6 +57,7 @@
     <div v-if="enviament_ok" class="alert alert-success">
       <h2>Empresa afegida correctament</h2>
     </div>
+    <div v-if="afegit_error" class="alert alert-danger">Errada afegint l'empresa</div>
   </div>
 </template>
 
@@ -80,6 +81,7 @@ export default {
         },
       ],
       enviament_ok: false,
+      afegit_error: false,
       novaEmpresa: {
         NIF: "",
         nom: "",
@@ -139,8 +141,16 @@ export default {
         });
         this.resposta = await response.json();
         this.enviament_ok = await this.resposta.ok;
-        await alert("La resposta del servidor és: " + this.resposta.error);
+        if (this.enviament_ok) {
+          alert("Empresa afegida correctament");
+          //this.$router.push("/empreses");
+        } else{
+          this.afegit_error = true;
+          alert("Error en l'operació, a resposta del servidor és: " + this.resposta.error);
+        }
       } catch (error) {
+        this.afegit_error = true;
+        alert("Error en l'enviament de dades: " + error);
         console.error(error);
       }
     },

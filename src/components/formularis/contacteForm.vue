@@ -39,6 +39,12 @@
     <button class="btn btn-outline-danger" @click="this.$router.push('/contactes')">
       <i class="fa-solid fa-xmark"></i>Cancelar
     </button>
+    <br>
+    <br>
+    <div v-if="afegit_ok" class="alert alert-success">
+      <h2>Contacte afegit correctament</h2>
+    </div>
+    <div v-if="afegit_error" class="alert alert-danger">Errada afegint el contacte</div>
   </div>
 </template>
 
@@ -51,6 +57,8 @@ export default {
   },
   data() {
     return {
+      afegit_error: false,
+      afegit_ok: false,
       nouContacte: {
         nomcontacte: "",
         carrec: "",
@@ -100,14 +108,17 @@ export default {
         const resposta = await response.json();
         if (resposta.ok) {
           alert("Contacte guardat correctament.");
+          this.afegit_ok = true;
           // Puedes redirigir a la página de contactes u otra acción necesaria
           //this.$router.push('/contactes');
         } else {
+          this.afegit_error = true;
           alert("Error al guardar el contacte: " + resposta.error);
         }
       } catch (error) {
+        this.afegit_error = true;
         console.error(error);
-        alert("Error al realizar la solicitud.");
+        alert("Error al guardar el contacte: " + error);
       }
     },
     cancelar() {

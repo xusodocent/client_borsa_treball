@@ -73,7 +73,8 @@
           <i class="fa-solid fa-xmark"></i>Cancelar
         </button>
       </div>
-      <div class="alert alert-warning" v-if="!validat">Tots els camps són obligatoris</div>
+      <br>
+      <div class="alert alert-warning" v-if="!validat">Tots els camps de text són obligatoris</div>
       <div class="alert alert-success" v-if="enviament_ok">Alumne afegit correctament</div>
       <div v-if="enviament_ok"><button type="button" class="btn btn-info" @click="this.$router.push('/alumnes')">Veure</button></div>
     </form>
@@ -133,12 +134,19 @@ export default {
           headers: { "Content-type": "application/json; charset=UTF-8" },
         });
         this.resposta = await response.json();
+        if (this.resposta.ok) {
+          this.enviament_ok = true;
+          alert("Alumne afegit correctament");
+        }else{
+          alert("Error al afegir alumne: " + this.resposta.error);
+        }
         //this.empreses = this.resposta.empreses;
         //await console.log(this.empreses);
-        this.enviament_ok = await this.resposta.ok;
-        await alert("La resposta del servidor és: " + this.resposta.error);
+        //this.enviament_ok = await this.resposta.ok;
+        //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
-        console.error(error);
+        alert("Error al afegir alumne: " + error);
+        //console.error(error);
       }
     },
   },
