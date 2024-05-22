@@ -55,11 +55,12 @@
             <label class="form-check-label" for="activo"> Actiu </label>
           </div>
         </div>
+        <!---
         <div class="col-lg-6 col-sm-12">
           <label for="pdf" class="form-label">Currículum</label>
           <input type="file" class="form-control" id="pdf" />
         </div>
-        
+        -->
       </div>
       <div class="col">
         <br /><br />
@@ -149,6 +150,9 @@ export default {
         //console.error(error);
       }
     },
+    async enviarCurriculum(){
+      console.log("Enviament curriculum");
+    }
   },
   mounted(){
     this.getCicles();

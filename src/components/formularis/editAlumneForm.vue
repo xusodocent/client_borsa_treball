@@ -55,11 +55,12 @@
                         <label class="form-check-label" for="activo"> Actiu </label>
                     </div>
                 </div>
+                <!---
                 <div class="col-lg-6 col-sm-12">
                     <label for="pdf" class="form-label">Currículum</label>
                     <input type="file" class="form-control" id="pdf" required />
                 </div>
-
+                --->
             </div>
             <div class="col">
                 <br /><br />

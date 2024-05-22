@@ -1,6 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <h1>Ofertes</h1>
+  <br>
+  <input type="text" v-model="filtro" placeholder="Buscar per empresa..." />
   <div class="container">
     <br>
     <button class="btn btn-dark" @click="this.$router.push('/novaoferta')">
@@ -18,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="oferta in ofertes" :key="oferta.id">
+          <tr v-for="oferta in ofertesFiltrades" :key="oferta.id">
             <td>{{ oferta.empresa.nomempresa }}</td>
             <td>{{ oferta.data }}</td>
             <td>{{ oferta.estat }}</td>
@@ -75,6 +77,7 @@ export default {
   },
   data() {
     return {
+      filtro:"",
       ofertes: [],
       ofertes2: [
         {
@@ -135,6 +138,13 @@ export default {
   },
   mounted(){
     this.getOfertes();
+  },
+  computed: {
+    ofertesFiltrades() {
+      return this.ofertes.filter(item => {
+        return item.empresa.nomempresa.toLowerCase().includes(this.filtro.toLowerCase());
+      });
+    },
   }
 };
 </script>
