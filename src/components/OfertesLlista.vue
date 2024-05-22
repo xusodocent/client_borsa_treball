@@ -77,7 +77,7 @@ export default {
   },
   data() {
     return {
-      filtro:"",
+      filtro:"",//es gasta per a filtrar ofertes
       ofertes: [],
       ofertes2: [
         {
