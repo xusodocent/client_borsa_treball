@@ -1,7 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1 class="text-center text-muted">Llistat de cicles</h1>
+    <h1 class="text-center fw-bold text-primary">Llistat de cicles</h1>
+    <hr>
     <br />
     <br />
     <div id="tabla-personas">
@@ -20,23 +21,16 @@
             <td>{{ cicle.nomcicle }}</td>
             <td>{{ cicle.graucicle }}</td>
             <td>
-            <button
-              type="button"
-              class="btn btn-outline-danger"
-              @click="deleteCicle(cicle.id)"
-            >
-              <i class="fa-regular fa-trash-can"></i>Eliminar
-            </button>
+              <button type="button" class="btn btn-outline-danger" @click="deleteCicle(cicle.id)">
+                <i class="fa-regular fa-trash-can"></i>Eliminar
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
     <br />
-    <br /><br /><button
-      class="btn btn-dark"
-      @click="this.$router.push('/noucicle')"
-    >
+    <br /><br /><button class="btn btn-dark" @click="this.$router.push('/noucicle')">
       <i class="fa-solid fa-plus"></i>Nou cicle
     </button>
   </div>
@@ -52,6 +46,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       cicles: [
         {
           id: 1,
@@ -75,7 +70,13 @@ export default {
     async getCicles() {
       let url = this.base_url + "/api/cicle/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: 'GET', // o 'POST', 'PUT', 'DELETE', etc.
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
         this.resposta = await response.json();
         this.cicles = this.resposta.cicles;
         await console.log(this.cicles);
@@ -96,6 +97,10 @@ export default {
           /*`http://10.2.0.126/api/empresa/${nif}`*/ url,
           {
             method: "DELETE",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.token}`
+            }
           }
         );
         this.resposta = await response.json();
@@ -108,7 +113,8 @@ export default {
       }
     },
   },
-  mounted(){
+  mounted() {
+    this.token = localStorage.getItem('jwtToken');
     this.getCicles();
   }
 };

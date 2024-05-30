@@ -1,56 +1,56 @@
 <template>
     <div class="container">
-        <h2 class="text-center text-muted">Detalls de l'oferta</h2>
+        <h2 class="text-center fw-bold text-primary">Detalls de l'oferta</h2>
         <table class="table table-striped">
-    <tbody>
-        <tr>
-            <td class="negreta">ID</td>
-            <td>{{ oferta.id }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Nom de l'empresa</td>
-            <td>{{ oferta.empresa.nomempresa }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Data</td>
-            <td>{{ oferta.data }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Estat</td>
-            <td>{{ oferta.estat ? 'Actiu' : 'Inactiu' }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Text de l'oferta</td>
-            <td>{{ oferta.textoferta }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Experiència</td>
-            <td>{{ oferta.experiencia }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Idiomes</td>
-            <td>{{ oferta.idiomes }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Altres</td>
-            <td>{{ oferta.altres }}</td>
-        </tr>
-        <tr>
-            <td class="negreta">Enllaç</td>
-            <td><a :href="oferta.urloferta" target="_blank">Enllaç</a></td>
-        </tr>
-        <tr>
-            <td class="negreta">Cicles</td>
-            <td>
-                <ul>
-                    <li v-for="cicle in oferta.cicles" :key="cicle.id">
-                        {{ cicle.nomcicle }} ({{ cicle.graucicle }})
-                    </li>
-                </ul>
-            </td>
-        </tr>
-    </tbody>
-</table>
+            <tbody>
+                <tr>
+                    <td class="negreta">ID</td>
+                    <td>{{ oferta.id }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Nom de l'empresa</td>
+                    <td>{{ oferta.empresa.nomempresa }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Data</td>
+                    <td>{{ oferta.data }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Estat</td>
+                    <td>{{ oferta.estat ? 'Actiu' : 'Inactiu' }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Text de l'oferta</td>
+                    <td>{{ oferta.textoferta }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Experiència</td>
+                    <td>{{ oferta.experiencia }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Idiomes</td>
+                    <td>{{ oferta.idiomes }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Altres</td>
+                    <td>{{ oferta.altres }}</td>
+                </tr>
+                <tr>
+                    <td class="negreta">Enllaç</td>
+                    <td><a :href="oferta.urloferta" target="_blank">Enllaç</a></td>
+                </tr>
+                <tr>
+                    <td class="negreta">Cicles</td>
+                    <td>
+                        <ul>
+                            <li v-for="cicle in oferta.cicles" :key="cicle.id">
+                                {{ cicle.nomcicle }} ({{ cicle.graucicle }})
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 </template>
@@ -64,7 +64,8 @@ export default {
     },
     data() {
         return {
-            oferta: {
+            token: "",
+            oferta: {/*
                 "id": 2,
                 "empresa": {
                     "nifempresa": "",
@@ -89,7 +90,7 @@ export default {
                         "graucicle": "S"
                     }
                 ]
-            },
+                */},
             validat: false,
             enviat: false,
         };
@@ -99,7 +100,12 @@ export default {
             let url = this.base_url + "/api/oferta/";
             try {
                 console.log("la ruta és" + this.$route.params.id);
-                const response = await fetch(url + this.$route.params.id);
+                const response = await fetch(url + this.$route.params.id, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                });
                 this.resposta = await response.json();
                 this.oferta = this.resposta.oferta;
                 await console.log(this.oferta);
@@ -118,14 +124,14 @@ export default {
         },
     },
     mounted() {
+        this.token = localStorage.getItem("token");
         this.getOferta();
     },
 };
 </script>
 
 <style>
-
-    .negreta{
-        font-weight: bold;
-        }
+.negreta {
+    font-weight: bold;
+}
 </style>

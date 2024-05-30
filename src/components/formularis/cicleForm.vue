@@ -61,6 +61,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       nouCicle: {
         nomcicle: "",
         graucicle: "",
@@ -78,7 +79,10 @@ export default {
         const response = await fetch(url, {
           method: "POST",
           body: JSON.stringify(this.nouCicle),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
         });
         this.resposta = await response.json();
         //this.empreses = this.resposta.empreses;
@@ -99,7 +103,10 @@ export default {
         alert("afegit_error: " + this.afegit_error);
       }
     },
-  }
+  },
+  mounted() {
+    this.token = localStorage.getItem("token");
+  },
 };
 </script>
 

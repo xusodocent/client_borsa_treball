@@ -34,7 +34,8 @@
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <label for="telefono" class="form-label">Competències</label>
-                    <input type="tel" class="form-control" id="competencies" required v-model="nouAlumne.competencies" />
+                    <input type="tel" class="form-control" id="competencies" required
+                        v-model="nouAlumne.competencies" />
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <label for="cicles" class="form-label">Cicles</label>
@@ -74,7 +75,7 @@
         </form>
     </div>
 </template>
-  
+
 <script>
 export default {
     name: "AlumneFormulari",
@@ -84,6 +85,7 @@ export default {
     },
     data() {
         return {
+            token: "",
             nouAlumne: {
                 nomalumne: "",
                 cognoms: "",
@@ -111,7 +113,12 @@ export default {
         async getCicles() {
             let url = this.base_url + "/api/cicle/";
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.token}`
+                        }
+                    });
                 this.resposta = await response.json();
                 this.cicles = this.resposta.cicles;
                 await console.log(this.cicles);
@@ -141,7 +148,13 @@ export default {
             try {
                 console.log("la ruta és" + this.$route.params.id);
                 const response = await fetch(
-                    url + this.$route.params.id
+                    url + this.$route.params.id,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.token}`
+                        }
+                    }
                 );
                 this.resposta = await response.json();
                 let alumne = this.resposta.alumne;
@@ -157,7 +170,10 @@ export default {
                 const response = await fetch(url, {
                     method: "PUT",
                     body: JSON.stringify(this.nouAlumne),
-                    headers: { "Content-type": "application/json; charset=UTF-8" },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
                 });
                 this.resposta = await response.json();
                 //this.empreses = this.resposta.empreses;
@@ -170,12 +186,12 @@ export default {
         },
     },
     mounted() {
+        this.token = localStorage.getItem("jwtToken");
         this.getCicles();
         this.getAlumne();
     }
 };
 </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>
-  

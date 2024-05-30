@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1 class="text-center text-muted">Empreses</h1>
+    <h1 class="text-center fw-bold text-primary">Dades de: {{ empresa.nom }}</h1>
     <br />
     <div id="tabla-personas">
       <table class="table table-striped">
@@ -60,6 +60,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       empresa: {
         NIF: "21507431Q",
         nom: "Roberta Klein",
@@ -82,7 +83,13 @@ export default {
       try {
         console.log("la ruta és" + this.$route.params.nif);
         const response = await fetch(
-          url + this.$route.params.nif
+          url + this.$route.params.nif, 
+          {
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+          }
         );
         this.resposta = await response.json();
         this.empresa = this.resposta.empresa;
@@ -102,6 +109,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("jwtToken");
     this.getEmpresa();
   }
 };

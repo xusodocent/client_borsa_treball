@@ -57,6 +57,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       afegit_error: false,
       afegit_ok: false,
       nouContacte: {
@@ -76,7 +77,12 @@ export default {
     async getEmpreses() {
       let url = this.base_url + "/api/empresa/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
         this.resposta = await response.json();
         this.llistaEmpreses = this.resposta.empreses;
         this.llistaEmpreses.sort(function (a, b) {
@@ -103,7 +109,10 @@ export default {
         const response = await fetch(url, {
           method: "POST", // O el método que tu API requiera
           body: JSON.stringify(this.nouContacte),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
         });
         const resposta = await response.json();
         if (resposta.ok) {
@@ -127,6 +136,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("token");
     this.getEmpreses();
   }
 };

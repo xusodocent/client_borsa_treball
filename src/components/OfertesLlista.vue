@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <h1>Ofertes</h1>
+  <h1 class="text-center fw-bold text-primary">Ofertes</h1>
+  <hr>
   <br>
   <input type="text" v-model="filtro" placeholder="Buscar per empresa..." />
   <div class="container">
@@ -77,6 +78,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       filtro:"",//es gasta per a filtrar ofertes
       ofertes: [],
       ofertes2: [
@@ -113,7 +115,13 @@ export default {
     async getOfertes() {
       let url = this.base_url + "/api/oferta";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
         this.resposta = await response.json();
         this.ofertes = this.resposta.ofertes;
         await console.log(this.ofertes);
@@ -126,6 +134,10 @@ export default {
       try {
         const response = await fetch(url, {
           method: "DELETE",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
         });
         this.resposta = await response.json();
         await console.log(this.resposta);
@@ -137,6 +149,7 @@ export default {
     
   },
   mounted(){
+    this.token = localStorage.getItem('jwtToken');
     this.getOfertes();
   },
   computed: {

@@ -1,10 +1,12 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1>Alumnes</h1>
+    <h1 class="text-center fw-bold text-primary">Alumnes</h1>
+    <hr>
     <br>
     <input type="text" v-model="filtro" placeholder="Buscar per cognom..." />
     <input type="text" v-model="filtroPoble" placeholder="Buscar per poble..." />
+    <input type="text" v-model="filtroCicle" placeholder="Buscar per cicle..." />
     <br /><br />
     <div id="tabla-personas">
       <table class="table table-striped">
@@ -68,8 +70,10 @@ export default {
   },
   data() {
     return {
+      token: "",
       filtro: "",
       filtroPoble: "",
+      filtroCicle: "",
       eliminat_ok: false,
       eliminat_error: false,
       alumnes: [{
@@ -107,7 +111,12 @@ export default {
     async getAlumnes() {
       let url = this.base_url + "/api/alumne/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }});
         this.resposta = await response.json();
         this.alumnes = this.resposta.alumnes;
         await console.log(this.alumnes);
@@ -124,6 +133,10 @@ export default {
           /*`http://10.2.0.126/api/empresa/${nif}`*/ url,
           {
             method: "DELETE",
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
           }
         );
         this.resposta = await response.json();
@@ -142,12 +155,19 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("jwtToken");
     this.getAlumnes();
   },
   computed: {
     alumnesFiltrats() {
-      return this.alumnes.filter(item => {
-        return item.cognoms.toLowerCase().includes(this.filtro.toLowerCase()) && item.poblacio.toLowerCase().includes(this.filtroPoble.toLowerCase());
+      return this.alumnes.filter(alumne => {
+        return (
+          alumne.cognoms.toLowerCase().includes(this.filtro.toLowerCase()) &&
+          alumne.poblacio.toLowerCase().includes(this.filtroPoble.toLowerCase()) &&
+          alumne.cicles.some(cicle =>
+            cicle.nomcicle.toLowerCase().includes(this.filtroCicle.toLowerCase())
+          )
+        );
       });
     },
   }

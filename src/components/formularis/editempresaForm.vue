@@ -35,7 +35,7 @@
         </div>
         <div class="col col-md-4 col-sm-12 col-xs-12">
           <label for="web" class="form-label">Web</label>
-          <input type="url" class="form-control" id="web" required v-model="novaEmpresa.web" />
+          <input type="url" class="form-control" id="web" v-model="novaEmpresa.web" />
         </div>
         <div class="col col-md-4 col-sm-12 col-xs-12">
           <label for="sector" class="form-label">Sector</label>
@@ -47,7 +47,7 @@
       </div>
       <br />
 
-      <button type="submit" class="btn btn-outline-success" @click="putEmpresa()">
+      <button type="button" class="btn btn-outline-success" @click="putEmpresa()">
         <i class="fa-regular fa-floppy-disk"></i>Modificar
       </button>
       <button class="btn btn-outline-danger" @click="this.$router.push('/empreses')">
@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       sectors: [
         {
           id: 1,
@@ -90,6 +91,7 @@ export default {
         email: "",
         web: "",
         sector: "1",
+        nomsector: ""
       },
       validat: false,
       enviat: false,
@@ -118,10 +120,13 @@ export default {
         const selectedSector = this.sectors.find(sector => sector.id === parseInt(this.novaEmpresa.idsector));
         this.novaEmpresa.nomsector = selectedSector ? selectedSector.nomsector : '';
 
-        const response = await fetch(url + this.$route.params.nif, {
+        const response = await fetch(url + this.novaEmpresa.NIF, {
           method: "PUT",
           body: JSON.stringify(this.novaEmpresa),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
         });
         this.resposta = await response.json();
         this.enviament_ok = await this.resposta.ok;
@@ -144,7 +149,12 @@ export default {
       try {
         console.log("la ruta és" + this.$route.params.nif);
         const response = await fetch(
-          url + this.$route.params.nif
+          url + this.$route.params.nif, {
+            method: "GET",
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }}
         );
         this.resposta = await response.json();
         this.novaEmpresa = this.resposta.empresa;
@@ -166,7 +176,10 @@ export default {
       let url = this.base_url + "/api/sector/";
       try {
         const response = await fetch(
-          url
+          url, {headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }}
         );
         this.resposta = await response.json();
         this.sectors = this.resposta.sectors;
@@ -177,6 +190,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("jwtToken");
     this.getEmpresa();
     this.getSectors();
   }

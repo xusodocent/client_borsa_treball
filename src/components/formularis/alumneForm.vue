@@ -91,6 +91,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       nouAlumne: {
         nomalumne: "",
         cognoms: "",
@@ -132,7 +133,10 @@ export default {
         const response = await fetch(url, {
           method: "POST",
           body: JSON.stringify(this.nouAlumne),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
         });
         this.resposta = await response.json();
         if (this.resposta.ok) {
@@ -155,6 +159,7 @@ export default {
     }
   },
   mounted(){
+    this.token = localStorage.getItem("token");
     this.getCicles();
   },
   computed:{

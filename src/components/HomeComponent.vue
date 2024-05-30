@@ -1,7 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1>Aplicació de gestió de la borsa de treball</h1>
+    <h1 class="text-center fw-bold text-primary">Aplicació de gestió de la borsa de treball</h1>
+    <hr>
     <br />
     <br />
     <table class="table table-striped">
@@ -45,29 +46,30 @@ export default {
     //msg: String
     base_url: String,
   },
-  data(){
-    return{
-      empreses:[],
-      alumnes:[],
-      contactes:[],
-      cicles:[],
-      ofertes:[]
+  data() {
+    return {
+      token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTY5OTIxNjQsImV4cCI6MTcxNjk5NTc2NCwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6Inh1c0BnbWFpbC5jb20ifQ.UHIpH4q7SnZP_7FH0N8Yv8gy_XpvuTGXMlpXp_TqjVBtyf0PgK3DWPdiah1TWzbxWlBD3MjX1Yc6vNq8W9bqZIOjFtnYawBd9h9mlg1LJwF_WkY90UujajhGPYNLf-u-3lEk8Z6_IaWewFFQRGeUd7j2S6-WiSj3KACMrwA2t_LG9DxyyFFy7WxbtNsRF6S28ldwvqBAhDPhVmoCdaGUzm1EaFd5bL1Gd9UjMl-rThlaKufAHg3L5Lp9Mz5TGqdDWlGcFWYBxHRYH8AlbHcKeUl6V1yW917THecoZAsahkh0CuWcZcKfBZdVwEIeUUFJoxELj5WL1QxhM8DoqZ1KfA",
+      empreses: [],
+      alumnes: [],
+      contactes: [],
+      cicles: [],
+      ofertes: []
     }
   },
-  computed:{
-    num_empreses(){
+  computed: {
+    num_empreses() {
       return this.empreses.length;
     },
-    num_ofertes(){
+    num_ofertes() {
       return this.ofertes.length;
     },
-    num_contactes(){
+    num_contactes() {
       return this.contactes.length;
     },
-    num_alumnes(){
+    num_alumnes() {
       return this.alumnes.length;
     },
-    num_cicles(){
+    num_cicles() {
       return this.cicles.length;
     }
   },
@@ -75,7 +77,13 @@ export default {
     async getAlumnes() {
       let url = this.base_url + "/api/alumne/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: 'GET', // o 'POST', 'PUT', 'DELETE', etc.
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
         this.resposta = await response.json();
         this.alumnes = this.resposta.alumnes;
         await console.log(this.alumnes);
@@ -87,7 +95,13 @@ export default {
       let url = this.base_url + "/api/contacte/";
       try {
         const response = await fetch(
-          url
+          url, {
+          method: 'GET', // o 'POST', 'PUT', 'DELETE', etc.
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        }
         );
         this.resposta = await response.json();
         this.contactes = this.resposta.contactes;
@@ -99,7 +113,13 @@ export default {
     async getEmpreses() {
       let url = this.base_url + "/api/empresa/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: 'GET', // o 'POST', 'PUT', 'DELETE', etc.
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
         this.resposta = await response.json();
         this.empreses = this.resposta.empreses;
         await console.log(this.empreses);
@@ -110,7 +130,13 @@ export default {
     async getOfertes() {
       let url = this.base_url + "/api/oferta";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: 'GET', // o 'POST', 'PUT', 'DELETE', etc.
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
         this.resposta = await response.json();
         this.ofertes = this.resposta.ofertes;
         await console.log(this.ofertes);
@@ -121,7 +147,13 @@ export default {
     async getCicles() {
       let url = this.base_url + "/api/cicle/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: 'GET', // o 'POST', 'PUT', 'DELETE', etc.
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
         this.resposta = await response.json();
         this.cicles = this.resposta.cicles;
         await console.log(this.cicles);
@@ -129,9 +161,13 @@ export default {
         console.error(error);
       }
     },
+    getToken() {
+      this.token = localStorage.getItem('jwtToken');
+    }
 
   },
-  mounted(){
+  mounted() {
+    this.getToken();
     this.getAlumnes();
     this.getCicles();
     this.getContactes();

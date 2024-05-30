@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1 class="text-center text-muted">Dades del contacte</h1>
+    <h1 class="text-center fw-bold text-primary">Dades del contacte: {{ contacte.nomcontacte }}</h1>
     <br />
     <div id="tabla-personas">
       <table class="table table-striped">
@@ -52,6 +52,7 @@ export default {
   },
   data() {
     return {
+      token: "",  
       contacte: {
         id: 4,
         nomcontacte: "Toni Sales / Mari Paz",
@@ -72,7 +73,13 @@ export default {
       let url = this.base_url + "/api/contacte/";
       try {
         console.log("la ruta és" + this.$route.params.id);
-        const response = await fetch(url + this.$route.params.id);
+        const response = await fetch(url + this.$route.params.id, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + this.token,
+          },
+        });
         this.resposta = await response.json();
         this.contacte = this.resposta.contacte;
         await console.log(this.contacte);
@@ -91,6 +98,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("token");
     this.getContacte();
   },
 };

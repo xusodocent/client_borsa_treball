@@ -1,7 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1>Contactes</h1>
+    <h1 class="text-center fw-bold text-primary">Contactes</h1>
+    <hr>
     <br />
     <input type="text" v-model="filtro" placeholder="Buscar per nom..." />
     <input type="text" v-model="filtroEmpresa" placeholder="Buscar per empresa..." />
@@ -80,6 +81,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       filtro:"",
       filtroEmpresa:"",
       contactes: [
@@ -112,7 +114,13 @@ export default {
     async getContactes() {
       let url = this.base_url + "/api/contacte/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+      });
         this.resposta = await response.json();
         this.contactes = this.resposta.contactes;
         await console.log(this.empreses);
@@ -127,6 +135,10 @@ export default {
           /*`http://10.2.0.126/api/empresa/${nif}`*/ url,
           {
             method: "DELETE",
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
           }
         );
         this.resposta = await response.json();
@@ -140,6 +152,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("jwtToken");
     this.getContactes();
   },
   computed:{

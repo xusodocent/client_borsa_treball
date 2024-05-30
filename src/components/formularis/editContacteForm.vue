@@ -25,7 +25,7 @@
                     <select class="form-select" id="sector" required v-model="empresaTriada" @change="onChangeEmpresa">
                         <option value="" disabled>Selecciona una</option>
                         <option :value="String(empresa.NIF)" v-for="empresa in llistaEmpreses" :key="empresa.NIF">{{
-                            empresa.nom }}
+                        empresa.nom }}
                         </option>
                     </select>
                 </div>
@@ -42,7 +42,7 @@
         </button>
     </div>
 </template>
-  
+
 <script>
 export default {
     name: "ContacteFormulari",
@@ -52,6 +52,7 @@ export default {
     },
     data() {
         return {
+            token: "",
             nouContacte: {
 
             },
@@ -66,7 +67,12 @@ export default {
         async getEmpreses() {
             let url = this.base_url + "/api/empresa/";
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                });
                 this.resposta = await response.json();
                 this.llistaEmpreses = this.resposta.empreses;
                 this.llistaEmpreses.sort(function (a, b) {
@@ -94,7 +100,10 @@ export default {
                 const response = await fetch(url + this.$route.params.id, {
                     method: "PUT", // O el método que tu API requiera
                     body: JSON.stringify(contacteEditat),
-                    headers: { "Content-type": "application/json; charset=UTF-8" },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    },
                 });
                 const resposta = await response.json();
                 if (resposta.ok) {
@@ -118,7 +127,13 @@ export default {
             try {
                 console.log("la ruta és" + this.$route.params.id);
                 const response = await fetch(
-                    url + this.$route.params.id
+                    url + this.$route.params.id,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.token}`
+                        }
+                    }
                 );
                 this.resposta = await response.json();
 
@@ -145,11 +160,12 @@ export default {
         }
     },
     mounted() {
+        this.token = localStorage.getItem("token");
         this.getEmpreses();
         this.getContacte();
     }
 };
 </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>

@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <h1>Sectors</h1>
+  <h1 class="text-center fw-bold text-primary">Sectors</h1>
+  <hr>
   <div class="container">
     <table class="table table-striped">
       <thead>
@@ -39,6 +40,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       eliminat_ok: false,
       eliminat_error: false,
       sectors: [
@@ -58,7 +60,13 @@ export default {
       let url = this.base_url + "/api/sector/";
       try {
         const response = await fetch(
-          url
+          url, {
+            method: "GET",
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+          }
         );
         this.resposta = await response.json();
         this.sectors = this.resposta.sectors;
@@ -74,6 +82,10 @@ export default {
       try {
         const response = await fetch(/*`http://10.2.0.126/api/empresa/${nif}`*/url, {
           method: "DELETE",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
         });
         this.resposta = await response.json();
         //this.empreses = this.resposta.empreses;
@@ -90,6 +102,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("jwtToken");
     this.getSectors();
     this.eliminat_ok = false;
     this.eliminat_error = false;

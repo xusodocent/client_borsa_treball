@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 //import HomeView from '../views/HomeView.vue'
 import Home from '../components/HomeComponent.vue'
+import Login from '../components/LoginComponent.vue'
 import About from '../components/AboutComponent.vue'
 import Empreses from '../components/EmpresesLlista.vue'
 import Contactes from '../components/ContactesLlista.vue'
@@ -27,12 +28,20 @@ import EditaAlumne from '../components/formularis/editAlumneForm.vue'
 import EditaContacte from '../components/formularis/editContacteForm.vue'
 import EditaOferta from '../components/formularis/editOferta.vue'
 
+import authService from '../services/authService';
+
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
   },
   {
     path: '/about',
@@ -40,7 +49,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: About
+    component: About,
+    meta: { requiresAuth: true }
   },
   {
     path: '/empreses',
@@ -48,7 +58,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: Empreses
+    component: Empreses,
+    meta: { requiresAuth: true }
   },
   {
     path: '/contactes',
@@ -56,7 +67,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: Contactes
+    component: Contactes,
+    meta: { requiresAuth: true }
   },
   {
     path: '/sectors',
@@ -64,7 +76,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: Sectors
+    component: Sectors,
+    meta: { requiresAuth: true }
   },
   {
     path: '/cicles',
@@ -72,7 +85,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: Cicles
+    component: Cicles,
+    meta: { requiresAuth: true }
   },
   {
     path: '/alumnes',
@@ -80,7 +94,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: Alumnes
+    component: Alumnes,
+    meta: { requiresAuth: true }
   },
   {
     path: '/ofertes',
@@ -88,7 +103,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: Ofertes
+    component: Ofertes,
+    meta: { requiresAuth: true }
   },
   {
     path: '/noucicle',
@@ -96,7 +112,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: CicleForm
+    component: CicleForm,
+    meta: { requiresAuth: true }
   },
   {
     path: '/novaempresa',
@@ -104,7 +121,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: EmpresaForm
+    component: EmpresaForm,
+    meta: { requiresAuth: true }
   },
   {
     path: '/nousector',
@@ -112,7 +130,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: SectorForm
+    component: SectorForm,
+    meta: { requiresAuth: true }
   },
   {
     path: '/noucontacte',
@@ -120,7 +139,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: ContacteForm
+    component: ContacteForm,
+    meta: { requiresAuth: true }
   },
   {
     path: '/noualumne',
@@ -128,7 +148,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: AlumneForm
+    component: AlumneForm,
+    meta: { requiresAuth: true }
   },
   {
     path: '/novaoferta',
@@ -136,7 +157,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: OfertaForm
+    component: OfertaForm,
+    meta: { requiresAuth: true }
   },
   {
     path: '/empresafitxa/:nif',
@@ -144,7 +166,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: EmpresaFitxa
+    component: EmpresaFitxa,
+    meta: { requiresAuth: true }
   },
   {
     path: '/contactefitxa/:id',
@@ -152,7 +175,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: ContacteFitxa
+    component: ContacteFitxa,
+    meta: { requiresAuth: true }
   },
   {
     path: '/alumnefitxa/:id',
@@ -160,7 +184,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: AlumneFitxa
+    component: AlumneFitxa,
+    meta: { requiresAuth: true }
   },
   {
     path: '/ofertafitxa/:id',
@@ -168,7 +193,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: OfertaFitxa
+    component: OfertaFitxa,
+    meta: { requiresAuth: true }
   },
   {
     path: '/editaempresa/:nif',
@@ -176,7 +202,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: EditaEmpresa
+    component: EditaEmpresa,
+    meta: { requiresAuth: true }
   },
   {
     path: '/editaalumne/:id',
@@ -185,6 +212,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: EditaAlumne,
+    meta: { requiresAuth: true }
   },
   {
     path: '/editacontacte/:id',
@@ -193,6 +221,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: EditaContacte,
+    meta: { requiresAuth: true }
   },
   {
     path: '/editaoferta/:id',
@@ -201,12 +230,26 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: EditaOferta,
+    meta: { requiresAuth: true }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!authService.isAuthenticated()) {
+      next({ name: 'login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
 
 export default router

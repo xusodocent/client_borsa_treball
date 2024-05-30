@@ -71,6 +71,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       oferta: {
         empresa: "",
         data: "",
@@ -96,7 +97,10 @@ export default {
     async getCicles() {
       let url = this.base_url + "/api/cicle/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }});
         this.resposta = await response.json();
         this.cicles = this.resposta.cicles;
         await console.log(this.cicles);
@@ -110,7 +114,10 @@ export default {
     async getEmpreses() {
       let url = this.base_url + "/api/empresa/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }});
         this.resposta = await response.json();
         this.llistaEmpreses = this.resposta.empreses;
         this.llistaEmpreses.sort(function (a, b) {
@@ -148,7 +155,10 @@ export default {
         const response = await fetch(url, {
           method: "POST",
           body: JSON.stringify(this.oferta),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
         });
         const resposta = await response.json();
         if(resposta.ok){
@@ -186,6 +196,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("token");
     this.getEmpreses();
     this.getCicles();
   }

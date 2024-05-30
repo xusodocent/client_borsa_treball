@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       sectors: [
         {
           id: 1,
@@ -111,7 +112,10 @@ export default {
       let url = this.base_url + "/api/sector/";
       try {
         const response = await fetch(
-          url
+          url, {headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }},
         );
         this.resposta = await response.json();
         this.sectors = this.resposta.sectors;
@@ -137,7 +141,10 @@ export default {
         const response = await fetch(url, {
           method: "POST",
           body: JSON.stringify(this.novaEmpresa),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
         });
         this.resposta = await response.json();
         this.enviament_ok = await this.resposta.ok;
@@ -168,6 +175,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("jwtToken");
     this.getSectors();
   }
 };

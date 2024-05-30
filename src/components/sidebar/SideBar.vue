@@ -20,6 +20,7 @@ export default {
       <span v-else>Gestió Borsa</span>
     </h1>
 
+    <SidebarLink to="/login" icon="fa-regular fa-user">Login/Logout</SidebarLink>
     <SidebarLink to="/" icon="fas fa-home">Inici</SidebarLink>
     <SidebarLink to="/empreses" icon="fa-solid fa-industry">Empreses</SidebarLink>
     <SidebarLink to="/contactes" icon="fa-regular fa-address-book">Contactes</SidebarLink>

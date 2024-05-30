@@ -1,7 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1 class="text-center text-muted">Empreses</h1>
+    <h1 class="text-center fw-bold text-primary">Empreses</h1>
+    <hr>
     <br />
     <input type="text" v-model="filtro" placeholder="Buscar per empresa..." id="buscarEmpresa"/>
     <input type="text" v-model="filtroPoble" placeholder="Buscar per poble..." id="buscarPoble"/>
@@ -82,12 +83,13 @@ export default {
   },
   data() {
     return {
+      token: "",
       resposta: "",
       filtro:"",
       filtroPoble: "",
 
       empreses: [
-        {
+      /*  {
           NIF: "21507431Q",
           nom: "Roberta Klein",
           domicili: "C/ Nuestra Señora De Luján 1 - ENTLO A",
@@ -110,7 +112,7 @@ export default {
           web: null,
           idsector: 1,
           nomsector: "Informàtica",
-        },
+        },*/
       ],
     };
   },
@@ -118,7 +120,13 @@ export default {
     async getEmpreses() {
       let url = this.base_url + "/api/empresa/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
+        });
         this.resposta = await response.json();
         this.empreses = this.resposta.empreses;
         await console.log(this.empreses);
@@ -139,6 +147,10 @@ export default {
           /*`http://10.2.0.126/api/empresa/${nif}`*/ url,
           {
             method: "DELETE",
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
           }
         );
         this.resposta = await response.json();
@@ -152,6 +164,7 @@ export default {
     },
   },
   mounted() {
+    this.token = localStorage.getItem("jwtToken");
     this.getEmpreses();
   },
   computed:{

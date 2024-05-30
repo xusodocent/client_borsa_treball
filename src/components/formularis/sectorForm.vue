@@ -34,6 +34,7 @@ export default {
   },
   data() {
     return {
+      token: "",
       nouSector: {
         //id: "",
         nomsector: "",
@@ -53,7 +54,10 @@ export default {
         const response = await fetch(url, {
           method: "POST",
           body: JSON.stringify(this.nouSector),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
         });
         console.log(response);
         const resposta = await response.json();
@@ -76,6 +80,9 @@ export default {
       }
     },
 
+  },
+  mounted() {
+    this.token = localStorage.getItem("token");
   },
 };
 </script>
