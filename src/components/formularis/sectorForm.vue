@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <h1>Editar Sector</h1>
+  <h1>Afegir Sector</h1>
   <div class="container">
     <form action="" @submit.prevent>
       <div class="col">
@@ -82,7 +82,7 @@ export default {
 
   },
   mounted() {
-    this.token = localStorage.getItem("token");
+    this.token = localStorage.getItem("jwtToken");
   },
 };
 </script>

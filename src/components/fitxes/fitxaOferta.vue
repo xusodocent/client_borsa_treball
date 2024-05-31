@@ -65,7 +65,7 @@ export default {
     data() {
         return {
             token: "",
-            oferta: {/*
+            oferta: {
                 "id": 2,
                 "empresa": {
                     "nifempresa": "",
@@ -90,7 +90,7 @@ export default {
                         "graucicle": "S"
                     }
                 ]
-                */},
+                },
             validat: false,
             enviat: false,
         };
@@ -124,7 +124,7 @@ export default {
         },
     },
     mounted() {
-        this.token = localStorage.getItem("token");
+        this.token = localStorage.getItem("jwtToken");
         this.getOferta();
     },
 };

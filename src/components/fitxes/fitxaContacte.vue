@@ -98,7 +98,7 @@ export default {
     },
   },
   mounted() {
-    this.token = localStorage.getItem("token");
+    this.token = localStorage.getItem("jwtToken");
     this.getContacte();
   },
 };

@@ -1,12 +1,11 @@
 <template>
   <div>
     <h1>Editar Oferta</h1>
-
     <form action="" @submit.prevent class="row g-3">
       <div class="row align-items-start">
         <div class="col-lg-6 col-sm-12">
           <label for="empresa" class="form-label">Empresa</label>
-          <select class="form-select" id="empresa" required v-model="oferta.empresa">
+          <select class="form-select" id="empresa" required v-model="oferta.empresa.NIF">
             <option value="" disabled>Selecciona una</option>
             <option :value="empresa.NIF" v-for="empresa in llistaEmpreses" :key="empresa.NIF">{{ empresa.nom }}</option>
           </select>
@@ -43,9 +42,8 @@
           </select>
         </div>
       </div>
-
       <div class="col-12">
-        <button class="btn btn-primary" @click="postOferta">Enviar Oferta</button>
+        <button class="btn btn-primary" @click="updateOferta">Enviar Oferta</button>
       </div>
     </form>
     <div v-if="afegit_ok" class="alert alert-success">Oferta afegida correctament</div>
@@ -58,13 +56,13 @@ export default {
   name: "OfertaFormulari",
   props: {
     base_url: String,
-    ofertaId: Number, // Añadimos la prop para recibir el ID de la oferta
+    ofertaId: Number,
   },
   data() {
     return {
       token: "",
       oferta: {
-        empresa: "",
+        empresa: { NIF: "" },
         data: "",
         estat: true,
         textoferta: "",
@@ -83,7 +81,7 @@ export default {
   },
   methods: {
     async getOferta() {
-      let url = this.base_url + "/api/oferta/" + this.$route.params.id; // Construimos la URL con el ID de la oferta
+      let url = this.base_url + "/api/oferta/" + this.$route.params.id;
       try {
         const response = await fetch(url, {
           headers: {
@@ -92,8 +90,8 @@ export default {
           }
         });
         const data = await response.json();
-        this.oferta = data.oferta; // Asignamos los datos de la oferta recibidos del servidor
-        this.selectedCicles = this.oferta.cicles; // Asignamos los cicles seleccionados
+        this.oferta = data.oferta;
+        this.selectedCicles = this.oferta.cicles;
       } catch (error) {
         console.error(error);
       }
@@ -128,17 +126,17 @@ export default {
         console.error(error);
       }
     },
-    async postOferta() {
-      if (!this.oferta.empresa) {
+    async updateOferta() {
+      if (!this.oferta.empresa.NIF) {
         alert("Cal seleccionar una empresa...");
         return;
       }
       this.afegit_ok = false;
       this.afegit_error = false;
-      let url = this.base_url + "/api/oferta/";
+      let url = this.base_url + "/api/oferta/" + this.$route.params.id;
       try {
         const response = await fetch(url, {
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify(this.oferta),
           headers: {
             'Content-Type': 'application/json',
@@ -147,7 +145,7 @@ export default {
         });
         const resposta = await response.json();
         if (resposta.ok) {
-          alert("Oferta afegida correctament");
+          alert("Oferta actualitzada correctament");
           this.afegit_ok = true;
         } else {
           alert("La resposta del servidor és: " + resposta.error);
@@ -155,14 +153,16 @@ export default {
         }
       } catch (error) {
         console.error(error);
+        this.afegit_error = true;
       }
     },
   },
   mounted() {
     this.token = localStorage.getItem("jwtToken");
-    this.getEmpreses();
-    this.getCicles();
-    this.getOferta();
+    this.getOferta().then(() => {
+      this.getEmpreses();
+      this.getCicles();
+    });
   },
 };
 </script>
