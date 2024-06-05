@@ -1,7 +1,7 @@
 <template>
     <h1>Editar Contacte</h1>
     <div class="container">
-        <form>
+        <form v-if="!loading">
             <div class="row align-items-start">
                 <div class="col-lg-6 col-sm-12">
                     <label for="nombre" class="form-label">Nom</label>
@@ -23,9 +23,7 @@
                     <label for="empresa" class="form-label">Empresa</label>
                     <select class="form-select" id="sector" required v-model="empresaTriada" @change="onChangeEmpresa">
                         <option value="" disabled>Selecciona una</option>
-                        <option :value="String(empresa.NIF)" v-for="empresa in llistaEmpreses" :key="empresa.NIF">{{
-                        empresa.nom }}
-                        </option>
+                        <option :value="String(empresa.NIF)" v-for="empresa in llistaEmpreses" :key="empresa.NIF">{{ empresa.nom }}</option>
                     </select>
                 </div>
             </div>
@@ -33,7 +31,7 @@
     </div>
     <div class="col">
         <br /><br />
-        <button type="submit" class="btn btn-outline-success" @click="actualitzarContacte()">
+        <button type="submit" class="btn btn-outline-success" @click="actualitzarContacte">
             <i class="fa-regular fa-floppy-disk"></i>Actualitzar
         </button>
         <button class="btn btn-outline-danger" @click="this.$router.push('/contactes')">
@@ -43,6 +41,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
     name: "ContacteFormulari",
     props: {
@@ -53,7 +53,8 @@ export default {
             token: "",
             nouContacte: {},
             empresaTriada: "",
-            llistaEmpreses: []
+            llistaEmpreses: [],
+            loading: true,
         };
     },
     methods: {
@@ -73,12 +74,17 @@ export default {
                 this.resposta = await response.json();
                 this.llistaEmpreses = this.resposta.empreses;
                 this.llistaEmpreses.sort((a, b) => a.nom.toUpperCase().localeCompare(b.nom.toUpperCase()));
+                this.loading = false;
             } catch (error) {
                 console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al carregar les empreses.'
+                });
             }
         },
         async actualitzarContacte() {
-            //alert("Actualitzant contacte...: " + this.empresaTriada);
             let url = this.base_url + "/api/contacte/";
             let contacteEditat = this.convertirAContacteReducido(this.nouContacte);
 
@@ -93,13 +99,26 @@ export default {
                 });
                 let resposta = await response.json();
                 if (resposta.ok) {
-                    alert("Contacte guardat correctament.");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Contacte guardat correctament',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else {
-                    alert("Error al guardar el contacte: " + resposta.error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar el contacte: ' + resposta.error
+                    });
                 }
             } catch (error) {
                 console.error(error);
-                alert("Error al realizar la solicitud.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al realitzar la sol·licitud.'
+                });
             }
         },
         async getContacte() {
@@ -114,8 +133,14 @@ export default {
                 this.resposta = await response.json();
                 this.nouContacte = this.resposta.contacte;
                 this.empresaTriada = this.nouContacte.nifempresa;
+                this.loading = false;
             } catch (error) {
                 console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al carregar el contacte.'
+                });
             }
         },
         convertirAContacteReducido(contacte) {
@@ -129,10 +154,10 @@ export default {
             };
         }
     },
-    mounted() {
+    async mounted() {
         this.token = localStorage.getItem("jwtToken");
-        this.getEmpreses();
-        this.getContacte();
+        await this.getEmpreses();
+        await this.getContacte();
     }
 };
 </script>

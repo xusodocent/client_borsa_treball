@@ -1,13 +1,11 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <h1>Editar empresa</h1>
   <div class="container">
-    <form>
+    <form v-if="!loading">
       <div class="row align-items-start">
         <div class="col col-md-4 col-sm-12 col-xs-12">
           <label for="nif" class="form-label">NIF</label>
-          <input type="text" class="form-control" id="nif" required v-model="novaEmpresa.NIF"
-            :placeholder="novaEmpresa.NIF" />
+          <input type="text" class="form-control" id="nif" required v-model="novaEmpresa.NIF" :placeholder="novaEmpresa.NIF" />
         </div>
         <div class="col col-md-4 col-sm-12 col-xs-12">
           <label for="nom" class="form-label">Nom</label>
@@ -39,7 +37,7 @@
         </div>
         <div class="col col-md-4 col-sm-12 col-xs-12">
           <label for="sector" class="form-label">Sector</label>
-          <select class="form-select" id="sector" required v-model="novaEmpresa.idsector" @change="onChangeSector">
+          <select class="form-select" id="sector" required v-model="novaEmpresa.sector" @change="onChangeSector">
             <option value="" disabled>Selecciona un sector</option>
             <option :value="String(sector.id)" v-for="sector in sectors" :key="sector.id">{{ sector.nomsector }}</option>
           </select>
@@ -62,24 +60,16 @@
 </template>
   
 <script>
+import Swal from 'sweetalert2';
 export default {
   name: "EmpresaFormulari",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
     return {
       token: "",
-      sectors: [
-        {
-          id: 1,
-          nomsector: "Informàtica",
-        },
-        {
-          id: 2,
-          nomsector: "Agrària",
-        }],
+      sectors: [],
       enviament_ok: false,
       novaEmpresa: {
         NIF: "",
@@ -90,34 +80,29 @@ export default {
         telefon: "",
         email: "",
         web: "",
-        sector: "1",
+        idsector: "",
+        sector: "",
         nomsector: ""
       },
       validat: false,
       enviat: false,
+      loading: true,
     };
   },
   methods: {
     onChangeSector() {
-      console.log("Sector seleccionado:", this.novaEmpresa.idsector);
-    },
-    getNomSector(idsector) {
-      // Método para obtener el nomsector correspondiente al idsector
-      const sector = this.sectors.find(sector => sector.id === parseInt(idsector));
-      return sector ? sector.nomsector : '';
+      console.log("Sector seleccionat:", this.novaEmpresa.sector);
     },
     async putEmpresa() {
-      // Verifica si el idsector está presente
-      if (!this.novaEmpresa.idsector) {
-        alert("Selecciona un sector antes de enviar el formulario.");
+      if (!this.novaEmpresa.sector) {
+        alert("Selecciona un sector abans d'enviar el formulari.");
         return;
       }
 
       let url = this.base_url + "/api/empresa/";
-      console.log(JSON.stringify(this.novaEmpresa));
+      console.log("Estic enviant açò:" + JSON.stringify(this.novaEmpresa));
       try {
-        // Asigna directamente el valor de nomsector desde novaEmpresa
-        const selectedSector = this.sectors.find(sector => sector.id === parseInt(this.novaEmpresa.idsector));
+        const selectedSector = this.sectors.find(sector => sector.id === parseInt(this.novaEmpresa.sector));
         this.novaEmpresa.nomsector = selectedSector ? selectedSector.nomsector : '';
 
         const response = await fetch(url + this.novaEmpresa.NIF, {
@@ -129,61 +114,63 @@ export default {
           },
         });
         this.resposta = await response.json();
-        this.enviament_ok = await this.resposta.ok;
+        this.enviament_ok = this.resposta.ok;
         if (this.resposta.ok) {
-          // Muestra el alert si this.resposta.ok es cierto
-          alert("S'ha modificat l'empresa correctament!");
+          Swal.fire({
+                        icon: 'success',
+                        title: 'Empresa guardada correctament',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+        }else {
+          Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar l\'empresa: ' + this.resposta.error
+                    });
         }
 
         this.enviament_ok = this.resposta.ok;
-        //await alert("La resposta del servidor és: " + this.resposta.error);
-        //await alert("La resposta del servidor és: " + this.resposta.ok);
 
       } catch (error) {
         console.error(error);
+        Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al realitzar la sol·licitud.'
+                });
       }
     },
-
     async getEmpresa() {
       let url = this.base_url + "/api/empresa/";
       try {
         console.log("la ruta és" + this.$route.params.nif);
-        const response = await fetch(
-          url + this.$route.params.nif, {
-            method: "GET",
-            headers: {
+        const response = await fetch(url + this.$route.params.nif, {
+          method: "GET",
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
           }}
         );
         this.resposta = await response.json();
         this.novaEmpresa = this.resposta.empresa;
-        await console.log(this.empreses);
+        this.novaEmpresa.sector = String(this.novaEmpresa.idsector);
+        this.loading = false;
       } catch (error) {
         console.error(error);
       }
     },
-    postUsuario() {
-      // Método para crear un usuario
-    },
-    putUsuario() {
-      // Método para actualizar un usuario
-    },
-    deleteUsuario() {
-      // Método para borrar un usuario
-    },
     async getSectors() {
       let url = this.base_url + "/api/sector/";
       try {
-        const response = await fetch(
-          url, {headers: {
+        const response = await fetch(url, {
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
           }}
         );
         this.resposta = await response.json();
         this.sectors = this.resposta.sectors;
-        //await console.log(this.empreses);
       } catch (error) {
         console.error(error);
       }
@@ -197,6 +184,4 @@ export default {
 };
 </script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>
-  

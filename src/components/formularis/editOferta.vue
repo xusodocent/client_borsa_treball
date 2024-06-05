@@ -135,6 +135,7 @@ export default {
       this.afegit_error = false;
       let url = this.base_url + "/api/oferta/" + this.$route.params.id;
       try {
+        console.log("Enviant oferta" + JSON.stringify(this.oferta));
         const response = await fetch(url, {
           method: "PUT",
           body: JSON.stringify(this.oferta),

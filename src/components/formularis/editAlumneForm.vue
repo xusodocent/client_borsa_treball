@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <h1>Editar Alumne</h1>
     <div class="container">
@@ -34,8 +33,7 @@
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <label for="telefono" class="form-label">Competències</label>
-                    <input type="tel" class="form-control" id="competencies" required
-                        v-model="nouAlumne.competencies" />
+                    <input type="tel" class="form-control" id="competencies" required v-model="nouAlumne.competencies" />
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <label for="cicles" class="form-label">Cicles</label>
@@ -77,10 +75,11 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
     name: "AlumneFormulari",
     props: {
-        //msg: String
         base_url: String,
     },
     data() {
@@ -101,9 +100,7 @@ export default {
                 estudis: "Ciles formatius, universitat, etc...",
                 competencies: "Totes",
             },
-            cicles: [
-
-            ],
+            cicles: [],
             selectedCicles: [],
             validat: false,
             enviat: false,
@@ -114,16 +111,21 @@ export default {
             let url = this.base_url + "/api/cicle/";
             try {
                 const response = await fetch(url, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${this.token}`
-                        }
-                    });
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                });
                 this.resposta = await response.json();
                 this.cicles = this.resposta.cicles;
                 await console.log(this.cicles);
             } catch (error) {
                 console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al carregar els cicles.'
+                });
             }
         },
         transformarAlumne(alumne) {
@@ -162,6 +164,11 @@ export default {
                 await console.log(this.nouAlumne);
             } catch (error) {
                 console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al carregar l\'alumne.'
+                });
             }
         },
         async putAlumne() {
@@ -176,14 +183,30 @@ export default {
                     }
                 });
                 this.resposta = await response.json();
-                //this.empreses = this.resposta.empreses;
-                //await console.log(this.empreses);
-                this.enviament_ok = await this.resposta.ok;
-                await alert("La resposta del servidor és: " + this.resposta.error);
+                //this.enviament_ok = await this.resposta.ok;
+                if (this.resposta.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Alumne guardat correctament',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al guardar l\'alumne: ' + this.resposta.error
+                    });
+                }
             } catch (error) {
                 console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al realitzar la sol·licitud.'
+                });
             }
-        },
+        }
     },
     mounted() {
         this.token = localStorage.getItem("jwtToken");
