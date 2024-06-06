@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <h1>Dades Alumne</h1>
   <div class="container">
@@ -83,10 +82,11 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "AlumneFormulari",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
@@ -107,11 +107,8 @@ export default {
         estudis: "Ciles formatius, universitat, etc...",
         competencies: "Totes",
       },
-      cicles: [
-       
-      ],
+      cicles: [],
       selectedCicles: [],
-      //validat: false,
       enviament_ok: false,
     };
   },
@@ -119,10 +116,16 @@ export default {
     async getCicles() {
       let url = this.base_url + "/api/cicle/";
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
+        });
         this.resposta = await response.json();
         this.cicles = this.resposta.cicles;
-        await console.log(this.cicles);
+        console.log(this.cicles);
       } catch (error) {
         console.error(error);
       }
@@ -141,17 +144,24 @@ export default {
         this.resposta = await response.json();
         if (this.resposta.ok) {
           this.enviament_ok = true;
-          alert("Alumne afegit correctament");
-        }else{
-          alert("Error al afegir alumne: " + this.resposta.error);
+          Swal.fire(
+            'Afegit!',
+            'L\'alumne s\'ha afegit correctament.',
+            'success'
+          );
+        } else {
+          Swal.fire(
+            'Error!',
+            'No s\'ha pogut afegir l\'alumne: ' + this.resposta.error,
+            'error'
+          );
         }
-        //this.empreses = this.resposta.empreses;
-        //await console.log(this.empreses);
-        //this.enviament_ok = await this.resposta.ok;
-        //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
-        alert("Error al afegir alumne: " + error);
-        //console.error(error);
+        Swal.fire(
+          'Error!',
+          'No s\'ha pogut afegir l\'alumne: ' + error,
+          'error'
+        );
       }
     },
     async enviarCurriculum(){
@@ -159,25 +169,21 @@ export default {
     }
   },
   mounted(){
-    this.token = localStorage.getItem("token");
+    this.token = localStorage.getItem("jwtToken");
     this.getCicles();
   },
   computed:{
-    //haz que todos los campos sean obligatorios
-    //si no se han rellenado todos los campos
-    //no se puede enviar el formulario
     validat(){
-      //comprova que el mail siga vàlid
-      //https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
       function validateEmail(email) {
         var re = /\S+@\S+\.\S+/;
         return re.test(email);
-      }                
+      }
       return this.nouAlumne.nomalumne && this.nouAlumne.cognoms && this.nouAlumne.poblacio && this.nouAlumne.telefon && validateEmail(this.nouAlumne.email) && this.nouAlumne.idiomes && this.nouAlumne.estudis && this.nouAlumne.competencies && this.nouAlumne.cicles;
     }
   }
 };
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>

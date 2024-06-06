@@ -92,6 +92,10 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
+//import VuePdf from 'vue-pdf';
+
 export default {
     name: "AlumneInfo",
     props: {
@@ -146,13 +150,25 @@ export default {
                 URL.revokeObjectURL(objectUrl);
             } catch (error) {
                 console.error("Error al descargar el archivo:", error);
-                alert("Error al descargar el archivo.");
+                Swal.fire(
+                    'Error!',
+                    'Error al descarregar el fitxer.',
+                    'error'
+                );
             }
+        },
+        async viewFile(){
+            //alert("Visualitzant el fitxer");
+            this.$router.push({ name: 'vorepdf', params: { id: this.alumne.id } });
         },
         async uploadCurriculum() {
             const file = this.$refs.pdfInput.files[0];
             if (!file) {
-                alert("Selecciona un fitxer PDF per penjar.");
+                Swal.fire(
+                    'Atenció!',
+                    'Selecciona un fitxer PDF per penjar.',
+                    'warning'
+                );
                 return;
             }
 
@@ -169,15 +185,27 @@ export default {
                 });
                 const data = await response.json();
                 if (response.ok) {
-                    alert("Currículum penjat amb èxit.");
+                    Swal.fire(
+                        'Èxit!',
+                        'Currículum penjat amb èxit.',
+                        'success'
+                    );
                     this.linkCurriculum = `${this.base_url}/api/alumne/download/${this.alumne.id}`;
                     this.curriculumExists = true;
                 } else {
-                    alert("Error al penjar el currículum: " + data.error);
+                    Swal.fire(
+                        'Error!',
+                        'Error al penjar el currículum: ' + data.error,
+                        'error'
+                    );
                 }
             } catch (error) {
                 console.error("Error al penjar el currículum:", error);
-                alert("Error al penjar el currículum.");
+                Swal.fire(
+                    'Error!',
+                    'Error al penjar el currículum.',
+                    'error'
+                );
             }
         },
         async getAlumne() {
@@ -220,3 +248,4 @@ export default {
 <style scoped>
 /* Estilos aquí */
 </style>
+

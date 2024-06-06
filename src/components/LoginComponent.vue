@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
 export default {
   props: {
     base_url: String,
@@ -52,7 +53,13 @@ export default {
   },
   methods: {
     logout() {
-      alert('Tancant la sessió... fins prompte!');
+      //alert('Tancant la sessió... fins prompte!');
+      Swal.fire({
+                        icon: 'info',
+                        title: 'Tancant sessió!',
+                        //showConfirmButton: false,
+                        //timer: 2000
+                    });
       localStorage.removeItem('jwtToken');
       localStorage.removeItem('email');
       this.tokenUpdateTrigger++;  // actualizar el trigger para forzar la actualización de la propiedad computada
@@ -73,9 +80,20 @@ export default {
 
         const data = await response.json();
         if (!data.token) {
-          alert('Ha fallat el Login: ' + data.message);
+          //alert('Ha fallat el Login: ' + data.message);
+          Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al realitzar la sol·licitud.' + data.message
+                });
         } else {
-          alert('Login exitós: ' + this.email);
+          //alert('Login exitós: ' + this.email);
+          Swal.fire({
+                        icon: 'success',
+                        title: 'Login exitós, benvingut!',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
           const token = data.token;
 
           // Guardar el token en localStorage

@@ -28,6 +28,8 @@ import EditaAlumne from '../components/formularis/editAlumneForm.vue'
 import EditaContacte from '../components/formularis/editContacteForm.vue'
 import EditaOferta from '../components/formularis/editOferta.vue'
 
+//import VorePdf from '../components/VorePdf.vue';
+
 import authService from '../services/authService';
 
 
@@ -231,7 +233,8 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: EditaOferta,
     meta: { requiresAuth: true }
-  }
+  },
+ // { path: '/vorepdf/:id', component: VorePdf, name: 'vorepdf' },
 ]
 
 const router = createRouter({

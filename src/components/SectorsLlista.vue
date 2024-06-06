@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <h1 class="text-center fw-bold text-primary">Sectors</h1>
   <hr>
@@ -15,7 +14,7 @@
           <td>{{ sector.id }}</td>
           <td>{{ sector.nomsector }}</td>
           <td>
-            <button type="button" class="btn btn-outline-danger" @click="this.deleteSector(sector.id)">
+            <button type="button" class="btn btn-outline-danger" @click="confirmDeleteSector(sector.id)">
               <i class="fa-regular fa-trash-can"></i>Eliminar
             </button>
           </td>
@@ -32,10 +31,11 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "SectorsLlista",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
@@ -63,24 +63,39 @@ export default {
           url, {
             method: "GET",
             headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`
-          }
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.token}`
+            }
           }
         );
         this.resposta = await response.json();
         this.sectors = this.resposta.sectors;
-        //await console.log(this.empreses);
       } catch (error) {
         console.error(error);
       }
+    },
+    confirmDeleteSector(id) {
+      Swal.fire({
+        title: 'Estàs segur?',
+        text: "No podràs desfer aquesta acció!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, elimina-ho!',
+        cancelButtonText: 'Cancel·la'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteSector(id);
+        }
+      });
     },
     async deleteSector(id) {
       this.eliminat_ok = false;
       this.eliminat_error = false;
       let url = this.base_url + "/api/sector/" + id;
       try {
-        const response = await fetch(/*`http://10.2.0.126/api/empresa/${nif}`*/url, {
+        const response = await fetch(url, {
           method: "DELETE",
           headers: {
             'Content-Type': 'application/json',
@@ -88,15 +103,29 @@ export default {
           }
         });
         this.resposta = await response.json();
-        //this.empreses = this.resposta.empreses;
-        //await console.log(this.empreses);
-        //await alert("Sector eliminat");
         if (this.resposta.ok == true) {
           this.eliminat_ok = true;
-        } 
+          Swal.fire(
+            'Eliminat!',
+            'El sector s\'ha eliminat correctament.',
+            'success'
+          );
+        } else {
+          this.eliminat_error = true;
+          Swal.fire(
+            'Error!',
+            'No s\'ha pogut eliminar el sector.',
+            'error'
+          );
+        }
         this.getSectors();
       } catch (error) {
         this.eliminat_error = true;
+        Swal.fire(
+          'Error!',
+          'No s\'ha pogut eliminar el sector.',
+          'error'
+        );
         console.error(error);
       }
     },
