@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
     <h1 class="text-center fw-bold text-primary">Llistat de cicles</h1>
@@ -21,7 +20,7 @@
             <td>{{ cicle.nomcicle }}</td>
             <td>{{ cicle.graucicle }}</td>
             <td>
-              <button type="button" class="btn btn-outline-danger" @click="deleteCicle(cicle.id)">
+              <button type="button" class="btn btn-outline-danger" @click="confirmDeleteCicle(cicle.id)">
                 <i class="fa-regular fa-trash-can"></i>Eliminar
               </button>
             </td>
@@ -37,11 +36,11 @@
 </template>
 
 <script>
-//import router from 'vue-router'
+import Swal from 'sweetalert2';
+
 export default {
   name: "CiclesLlista",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
@@ -71,7 +70,7 @@ export default {
       let url = this.base_url + "/api/cicle/";
       try {
         const response = await fetch(url, {
-          method: 'GET', // o 'POST', 'PUT', 'DELETE', etc.
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -79,7 +78,6 @@ export default {
         });
         this.resposta = await response.json();
         this.cicles = this.resposta.cicles;
-        await console.log(this.cicles);
       } catch (error) {
         console.error(error);
       }
@@ -90,23 +88,37 @@ export default {
     putUsuario() {
       // Método para actualizar un usuario
     },
+    confirmDeleteCicle(id) {
+      Swal.fire({
+        title: 'Estàs segur?',
+        text: "No podràs revertir això!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar-ho!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteCicle(id);
+        }
+      });
+    },
     async deleteCicle(id) {
       let url = this.base_url + "/api/cicle/" + id;
       try {
-        const response = await fetch(
-          /*`http://10.2.0.126/api/empresa/${nif}`*/ url,
-          {
-            method: "DELETE",
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.token}`
-            }
+        const response = await fetch(url, {
+          method: "DELETE",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
           }
-        );
+        });
         this.resposta = await response.json();
-        //this.empreses = this.resposta.empreses;
-        //await console.log(this.empreses);
-        await alert("Cicle eliminat");
+        Swal.fire(
+          'Eliminat!',
+          'El cicle ha estat eliminat.',
+          'success'
+        );
         this.getCicles();
       } catch (error) {
         console.error(error);
@@ -120,5 +132,4 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>

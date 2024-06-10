@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
     <h1 class="text-center fw-bold text-primary">Contactes</h1>
@@ -43,7 +42,7 @@
               <button
                 type="button"
                 class="btn btn-outline-danger"
-                @click="deleteContacte(contacte.id)"
+                @click="confirmDelete(contacte.id)"
               >
                 <i class="fa-regular fa-trash-can"></i>Eliminar
               </button>
@@ -73,17 +72,18 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "ContactesLlista",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
     return {
       token: "",
-      filtro:"",
-      filtroEmpresa:"",
+      filtro: "",
+      filtroEmpresa: "",
       contactes: [
         {
           id: 4,
@@ -131,24 +131,36 @@ export default {
     async deleteContacte(id) {
       let url = this.base_url + "/api/contacte/" + id;
       try {
-        const response = await fetch(
-          /*`http://10.2.0.126/api/empresa/${nif}`*/ url,
-          {
-            method: "DELETE",
-            headers: {
+        const response = await fetch(url, {
+          method: "DELETE",
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
-          },
           }
-        );
+        });
         this.resposta = await response.json();
-        //this.empreses = this.resposta.empreses;
-        //await console.log(this.empreses);
-        await alert("Contacte eliminat");
+        await Swal.fire('Contacte eliminat', '', 'success');
         this.getContactes();
       } catch (error) {
         console.error(error);
+        Swal.fire('Error', 'No s\'ha pogut eliminar el contacte', 'error');
       }
+    },
+    confirmDelete(id) {
+      Swal.fire({
+        title: 'Estàs segur?',
+        text: "No podràs revertir això!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'Cancel·lar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteContacte(id);
+        }
+      });
     },
   },
   mounted() {

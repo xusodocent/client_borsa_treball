@@ -1,8 +1,7 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <h1>Nou cicle</h1>
   <div class="container">
-    <form>
+    <form @submit.prevent="postCicle">
       <div class="mb-3">
         <label for="nom" class="form-label">Cicle</label>
         <input
@@ -35,7 +34,7 @@
       </div>
       <div class="col-lg-2">
         <br /><br />
-        <button type="submit" class="btn btn-outline-success" @click="this.postCicle()">
+        <button type="submit" class="btn btn-outline-success">
           <i class="fa-regular fa-floppy-disk"></i>Afegir
         </button>
         <button
@@ -45,18 +44,16 @@
           <i class="fa-solid fa-xmark"></i>Cancelar
         </button>
       </div>
-      <br>
-      <div v-if="afegit_ok" class="alert alert-success">S'ha afegit correctament el cicle</div>
-      <div v-if="afegit_error" class="alert alert-danger">Errada afegint el cicle</div>
     </form>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "CicleFormulari",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
@@ -66,10 +63,6 @@ export default {
         nomcicle: "",
         graucicle: "",
       },
-      //validat: false,
-      //enviat: false,
-      afegit_ok: false,
-      afegit_error: false,
     };
   },
   methods:{
@@ -85,22 +78,26 @@ export default {
           },
         });
         this.resposta = await response.json();
-        //this.empreses = this.resposta.empreses;
-        alert("La resposta del servidor és: " + this.resposta);
-        this.afegit_ok = await this.resposta.ok;
-        if (this.afegit_ok) {
-          alert("Cicle afegit correctament");
-          this.afegit_ok = true;
-        } else {
-          alert("Error afegint el cicle: " + this.resposta.error);
-          this.afegit_error = true;
-        }
-        //await alert("La resposta del servidor és: " + this.resposta.error);
-      } catch (error) {
-        this.afegit_error = true;
-        alert("Error afegint el cicle: " + error);
         
-        alert("afegit_error: " + this.afegit_error);
+        if (this.resposta.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Cicle afegit',
+            text: 'El cicle s\'ha afegit correctament.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error afegint el cicle: ' + this.resposta.error,
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error afegint el cicle: ' + error,
+        });
       }
     },
   },
@@ -110,5 +107,4 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>

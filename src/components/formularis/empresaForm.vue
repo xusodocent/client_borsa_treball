@@ -40,7 +40,8 @@
           <label for="sector" class="form-label">Sector</label>
           <select class="form-select" id="sector" required v-model="novaEmpresa.sector" @change="onChangeSector">
             <option value="" disabled>Selecciona un sector</option>
-            <option :value="String(sector.id)" v-for="sector in sectors" :key="sector.id">{{ sector.nomsector }}</option>
+            <option :value="String(sector.id)" v-for="sector in sectors" :key="sector.id">{{ sector.nomsector }}
+            </option>
           </select>
         </div>
       </div>
@@ -62,6 +63,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "EmpresaFormulari",
   props: {
@@ -112,10 +115,12 @@ export default {
       let url = this.base_url + "/api/sector/";
       try {
         const response = await fetch(
-          url, {headers: {
+          url, {
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
-          }},
+          }
+        },
         );
         this.resposta = await response.json();
         this.sectors = this.resposta.sectors;
@@ -127,7 +132,12 @@ export default {
     async postEmpresa() {
       // Verifica si el idsector está presente
       if (!this.novaEmpresa.sector) {
-        alert("Selecciona un sector antes de enviar el formulario.");
+        //alert("Selecciona un sector antes de enviar el formulario.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Selecciona un sector abans d\'enviar el formulari.',
+        });
         return;
       }
 
@@ -149,15 +159,30 @@ export default {
         this.resposta = await response.json();
         this.enviament_ok = await this.resposta.ok;
         if (this.enviament_ok) {
-          alert("Empresa afegida correctament");
+          //alert("Empresa afegida correctament");
+          Swal.fire({
+            icon: 'success',
+            title: 'Empresa afegida',
+            text: 'L\'empresa s\'ha afegit correctament.',
+          });
           //this.$router.push("/empreses");
-        } else{
+        } else {
           this.afegit_error = true;
-          alert("Error en l'operació, a resposta del servidor és: " + this.resposta.error);
+          //alert("Error en l'operació, a resposta del servidor és: " + this.resposta.error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error en l\'enviament de dades, el servidor diu: ' + this.resposta.error,
+          });
         }
       } catch (error) {
         this.afegit_error = true;
-        alert("Error en l'enviament de dades: " + error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en l\'enviament de dades: ' + error,
+        });
+
         console.error(error);
       }
     },

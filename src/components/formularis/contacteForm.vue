@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "ContacteFormulari",
   props: {
@@ -116,18 +118,35 @@ export default {
         });
         const resposta = await response.json();
         if (resposta.ok) {
-          alert("Contacte guardat correctament.");
+          //alert("Contacte guardat correctament.");
+          Swal.fire({
+            title: 'Contacte afegit correctament',
+            icon: 'success',
+            confirmButtonText: 'D\'acord'
+          });
           this.afegit_ok = true;
           // Puedes redirigir a la página de contactes u otra acción necesaria
           //this.$router.push('/contactes');
         } else {
           this.afegit_error = true;
-          alert("Error al guardar el contacte: " + resposta.error);
+          //alert("Error al guardar el contacte: " + resposta.error);
+          Swal.fire({
+            title: 'Error afegint el contacte',
+            text: resposta.error,
+            icon: 'error',
+            confirmButtonText: 'D\'acord'
+          });
         }
       } catch (error) {
         this.afegit_error = true;
         console.error(error);
-        alert("Error al guardar el contacte: " + error);
+        //alert("Error al guardar el contacte: " + error);
+        Swal.fire({
+          title: 'Error afegint el contacte',
+          text: error,
+          icon: 'error',
+          confirmButtonText: 'D\'acord'
+        });
       }
     },
     cancelar() {
