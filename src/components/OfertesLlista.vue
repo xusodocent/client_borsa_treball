@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <h1 class="text-center fw-bold text-primary">Ofertes</h1>
   <hr>
@@ -7,9 +6,9 @@
   <div class="container">
     <br>
     <button class="btn btn-dark" @click="this.$router.push('/novaoferta')">
-    <i class="fa-solid fa-plus"></i>Nova Oferta
-  </button>
-  <br>
+      <i class="fa-solid fa-plus"></i>Nova Oferta
+    </button>
+    <br>
     <div id="tabla-personas">
       <table class="table table-striped">
         <thead>
@@ -28,58 +27,58 @@
             <td><a :href="oferta.urloferta">{{ oferta.urloferta }}</a></td>
             <td>
               <button
-              type="button"
-              class="btn btn-outline-success"
-              @click="
-                this.$router.push({
-                  path: `/ofertafitxa/${oferta.id}`,
-                  params: { id: oferta.id },
-                })
-              "
-            >
-              <i class="fa-regular fa-eye"></i>
-              Veure
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger"
-              @click="deleteOferta(oferta.id)"
-            >
-              <i class="fa-regular fa-trash-can"></i>Eliminar
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-info"
-              @click="
-                this.$router.push({
-                  path: `/editaoferta/${oferta.id}`,
-                  params: { id: oferta.id },
-                })
-              "
-            >
-              <i class="fa-solid fa-file-pen"></i>
-              Modificar
-            </button>
+                type="button"
+                class="btn btn-outline-success"
+                @click="
+                  this.$router.push({
+                    path: `/ofertafitxa/${oferta.id}`,
+                    params: { id: oferta.id },
+                  })
+                "
+              >
+                <i class="fa-regular fa-eye"></i>
+                Veure
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="confirmDelete(oferta.id)"
+              >
+                <i class="fa-regular fa-trash-can"></i>Eliminar
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-info"
+                @click="
+                  this.$router.push({
+                    path: `/editaoferta/${oferta.id}`,
+                    params: { id: oferta.id },
+                  })
+                "
+              >
+                <i class="fa-solid fa-file-pen"></i>
+                Modificar
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "OfertesLlista",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
     return {
       token: "",
-      filtro:"",//es gasta per a filtrar ofertes
+      filtro: "", //es gasta per a filtrar ofertes
       ofertes: [],
       ofertes2: [
         {
@@ -111,7 +110,7 @@ export default {
       ],
     };
   },
-  methods:{
+  methods: {
     async getOfertes() {
       let url = this.base_url + "/api/oferta";
       try {
@@ -146,9 +145,29 @@ export default {
         console.error(error);
       }
     },
-    
+    confirmDelete(id) {
+      Swal.fire({
+        title: 'Estàs segur?',
+        text: "Aquesta acció no es pot desfer!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, elimina-ho!',
+        cancelButtonText: 'Cancel·lar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteOferta(id);
+          Swal.fire(
+            'Eliminat!',
+            'L\'oferta ha estat eliminada.',
+            'success'
+          );
+        }
+      });
+    },
   },
-  mounted(){
+  mounted() {
     this.token = localStorage.getItem('jwtToken');
     this.getOfertes();
   },

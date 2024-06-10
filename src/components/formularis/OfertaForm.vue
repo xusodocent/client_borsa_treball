@@ -63,6 +63,8 @@
 </template>
   
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "OfertaFormulari",
   props: {
@@ -140,7 +142,12 @@ export default {
     async postOferta() {
       // Verifica si el idsector está presente
       if (!this.oferta.empresa) {
-        alert("Obligatori triar empresa...");
+        //alert("Obligatori triar empresa...");
+        Swal.fire({
+          icon: 'error',
+          title: 'Obligatori triar empresa...',
+          text: 'Selecciona una empresa'
+        });
         return;
       }
       this.afegit_ok = false;
@@ -162,17 +169,32 @@ export default {
         });
         const resposta = await response.json();
         if(resposta.ok){
-          alert("Oferta afegida correctament");
+          //alert("Oferta afegida correctament");
+          Swal.fire({
+            icon: 'success',
+            title: 'Oferta afegida correctament',
+            text: "La resposta del esrvidor és:" + resposta.ok
+          });
           this.afegit_ok = true;
         }
         else{
-          alert("La resposta del servidor és: " + resposta.error);
+          //alert("La resposta del servidor és: " + resposta.error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error en enviar dades al servidor',
+            text: resposta.error
+          });
           this.afegit_error = true;
         }
         //this.enviament_ok = await this.resposta.ok;
         //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
-        alert("Error en enviar dades al servidor: " + error);
+        //alert("Error en enviar dades al servidor: " + error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en enviar dades al servidor',
+          text: error
+        });
         this.afegit_error = true;
         console.error(error);
       }
@@ -196,7 +218,7 @@ export default {
     },
   },
   mounted() {
-    this.token = localStorage.getItem("token");
+    this.token = localStorage.getItem("jwtToken");
     this.getEmpreses();
     this.getCicles();
   }
