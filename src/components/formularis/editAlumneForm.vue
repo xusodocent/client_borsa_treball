@@ -1,7 +1,7 @@
 <template>
     <h1>Editar Alumne</h1>
     <div class="container">
-        <form>
+        <form @submit.prevent="putAlumne">
             <div class="row align-items-start">
                 <div class="col-lg-6 col-sm-12">
                     <label for="nombre" class="form-label">Nom</label>
@@ -33,7 +33,8 @@
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <label for="telefono" class="form-label">Competències</label>
-                    <input type="tel" class="form-control" id="competencies" required v-model="nouAlumne.competencies" />
+                    <input type="tel" class="form-control" id="competencies" required
+                        v-model="nouAlumne.competencies" />
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <label for="cicles" class="form-label">Cicles</label>
@@ -63,7 +64,7 @@
             </div>
             <div class="col">
                 <br /><br />
-                <button type="submit" class="btn btn-outline-success" @click="this.putAlumne()">
+                <button type="submit" class="btn btn-outline-success">
                     <i class="fa-regular fa-floppy-disk"></i>Modificar
                 </button>
                 <button class="btn btn-outline-danger" @click="this.$router.push('/alumnes')">
@@ -84,6 +85,7 @@ export default {
     },
     data() {
         return {
+            resposta: {},
             token: "",
             nouAlumne: {
                 nomalumne: "",
@@ -138,7 +140,7 @@ export default {
                 transport: alumne.transport || true,
                 actiu: alumne.actiu || true,
                 pdf: alumne.pdf || true,
-                cicles: alumne.cicles || [],
+                cicles: alumne.cicles.map(cicle => cicle.id) || [],
                 experiencia: alumne.curriculum ? alumne.curriculum.experiencia || "" : "",
                 idiomes: alumne.curriculum ? alumne.curriculum.idiomes || "Valencià, Castellà, Anglés, etc..." : "Valencià, Castellà, Anglés, etc...",
                 estudis: alumne.curriculum ? alumne.curriculum.estudis || "Ciles formatius, universitat, etc..." : "Ciles formatius, universitat, etc...",
@@ -161,7 +163,7 @@ export default {
                 this.resposta = await response.json();
                 let alumne = this.resposta.alumne;
                 this.nouAlumne = this.transformarAlumne(alumne);
-                await console.log(this.nouAlumne);
+                await console.log("El nou alumne és:" + JSON.stringify(this.nouAlumne));
             } catch (error) {
                 console.error(error);
                 Swal.fire({
@@ -182,31 +184,30 @@ export default {
                         'Authorization': `Bearer ${this.token}`
                     }
                 });
-                this.resposta = await response.json();
-                //this.enviament_ok = await this.resposta.ok;
-                if (this.resposta.ok) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Alumne guardat correctament',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Error al guardar l\'alumne: ' + this.resposta.error
-                    });
+
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor: ' + response.statusText);
                 }
+
+                this.resposta = await response.json();
+
+                console.log("La respuesta del servidor es:" + JSON.stringify(this.resposta));
+
+                Swal.fire({
+                    title: 'Contacte modificat correctament',
+                    icon: 'success',
+                    confirmButtonText: 'D\'acord'
+                });
             } catch (error) {
                 console.error(error);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'Error al realitzar la sol·licitud.'
+                    title: 'Oops...',
+                    text: 'Alguna cosa ha anat malament!' + error,
                 });
             }
         }
+
     },
     mounted() {
         this.token = localStorage.getItem("jwtToken");
