@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "OfertaFormulari",
   props: {
@@ -128,7 +130,12 @@ export default {
     },
     async updateOferta() {
       if (!this.oferta.empresa.NIF) {
-        alert("Cal seleccionar una empresa...");
+        //alert("Cal seleccionar una empresa...");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Cal seleccionar una empresa...'
+        });
         return;
       }
       this.afegit_ok = false;
@@ -149,7 +156,12 @@ export default {
           alert("Oferta actualitzada correctament");
           this.afegit_ok = true;
         } else {
-          alert("La resposta del servidor és: " + resposta.error);
+          //alert("La resposta del servidor és: " + resposta.error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'La resposta del servidor és: ' + resposta.error
+          });
           this.afegit_error = true;
         }
       } catch (error) {

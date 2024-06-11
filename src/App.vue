@@ -1,6 +1,9 @@
 <script>
 import Sidebar from '@/components/sidebar/SideBar'
 import { sidebarWidth } from '@/components/sidebar/state'
+import authService from './services/authService'
+import Swal from 'sweetalert2';
+
 export default {
   components: { Sidebar },
   setup() {
@@ -10,7 +13,18 @@ export default {
     return{
       base_url: "http://172.29.35.24",
     }
-  }
+  },
+  mounted() {
+    if (authService.isTokenExpired()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La sessió ha expirat.'
+      });
+      authService.logout();
+      this.$router.push({ name: 'login' });
+    }
+  },
 }
 </script>
 <template>

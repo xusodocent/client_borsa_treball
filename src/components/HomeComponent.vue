@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import authService from '@/services/authService';
+import Swal from 'sweetalert2';
 export default {
   name: "HomeComponent",
   props: {
@@ -167,6 +169,15 @@ export default {
 
   },
   mounted() {
+    if (authService.isTokenExpired()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La sessió ha expirat.'
+      });
+      authService.logout();
+      this.$router.push({ name: 'login' });
+    }
     this.getToken();
     this.getAlumnes();
     this.getCicles();
