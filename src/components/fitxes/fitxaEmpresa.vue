@@ -45,9 +45,13 @@
         </tbody>
       </table>
     </div>
-    <button class="btn btn-dark" @click="this.$router.push('/novaempresa')">
-      <i class="fa-solid fa-plus"></i>Nova empresa
-    </button>
+    <button
+                type="button"
+                class="btn btn-outline-info"
+                @click="this.$router.push({ path: `/editaempresa/${empresa.NIF}`, params: { nif: empresa.NIF } })"
+              >
+                <i class="fa-solid fa-file-pen"></i> Modificar
+              </button>
   </div>
 </template>
 
