@@ -60,7 +60,6 @@ export default {
     methods: {
         onChangeEmpresa() {
             this.nouContacte.nifempresa = this.empresaTriada;
-            console.log(this.nouContacte.nifempresa);
         },
         async getEmpreses() {
             let url = this.base_url + "/api/empresa/";
@@ -74,7 +73,6 @@ export default {
                 this.resposta = await response.json();
                 this.llistaEmpreses = this.resposta.empreses;
                 this.llistaEmpreses.sort((a, b) => a.nom.toUpperCase().localeCompare(b.nom.toUpperCase()));
-                this.loading = false;
             } catch (error) {
                 console.error(error);
                 Swal.fire({
@@ -102,9 +100,10 @@ export default {
                     Swal.fire({
                         icon: 'success',
                         title: 'Contacte guardat correctament',
-                        showConfirmButton: false,
+                        showConfirmButton: true,
                         timer: 2000
                     });
+                    this.$router.push('/contactes');
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -132,8 +131,7 @@ export default {
                 });
                 this.resposta = await response.json();
                 this.nouContacte = this.resposta.contacte;
-                this.empresaTriada = this.nouContacte.nifempresa;
-                this.loading = false;
+                this.setEmpresaTriada();
             } catch (error) {
                 console.error(error);
                 Swal.fire({
@@ -141,6 +139,13 @@ export default {
                     title: 'Error',
                     text: 'Error al carregar el contacte.'
                 });
+            }
+        },
+        setEmpresaTriada() {
+            if (this.llistaEmpreses.length > 0) {
+                this.empresaTriada = this.nouContacte.nifempresa;
+            } else {
+                setTimeout(this.setEmpresaTriada, 100);
             }
         },
         convertirAContacteReducido(contacte) {
@@ -156,8 +161,9 @@ export default {
     },
     async mounted() {
         this.token = localStorage.getItem("jwtToken");
-        await this.getEmpreses();
-        await this.getContacte();
+        await this.getEmpreses(); // Primer carrega les empreses
+        await this.getContacte(); // Després carrega el contacte i configura empresaTriada
+        this.loading = false; // Finalment canvia el loading a false
     }
 };
 </script>

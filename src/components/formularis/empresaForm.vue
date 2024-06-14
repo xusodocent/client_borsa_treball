@@ -55,10 +55,10 @@
       </button>
     </form>
     <br>
-    <div v-if="enviament_ok" class="alert alert-success">
+    <div v-if=false class="alert alert-success">
       <h2>Empresa afegida correctament</h2>
     </div>
-    <div v-if="afegit_error" class="alert alert-danger">Errada afegint l'empresa</div>
+    <div v-if=false class="alert alert-danger">Errada afegint l'empresa</div> 
   </div>
 </template>
 
@@ -164,8 +164,9 @@ export default {
             icon: 'success',
             title: 'Empresa afegida',
             text: 'L\'empresa s\'ha afegit correctament.',
+            showConfirmButton: true,
           });
-          //this.$router.push("/empreses");
+          this.$router.push("/empreses");
         } else {
           this.afegit_error = true;
           //alert("Error en l'operació, a resposta del servidor és: " + this.resposta.error);
@@ -173,6 +174,7 @@ export default {
             icon: 'error',
             title: 'Error',
             text: 'Error en l\'enviament de dades, el servidor diu: ' + this.resposta.error,
+            showConfirmButton: true,
           });
         }
       } catch (error) {

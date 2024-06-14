@@ -38,16 +38,22 @@
         </div>
         <div class="col-lg-6 col-sm-12">
           <label for="cicles" class="form-label">Cicles</label>
-          <select multiple class="form-select" id="cicles" v-model="oferta.cicles" required >
+          <select multiple class="form-select" id="cicles" v-model="oferta.cicles" required>
             <option value="" disabled>Selecciona vàrios ciles amb Ctrl</option>
             <option :value="cicle.id" v-for="cicle in cicles" :key="cicle.id">
               {{ cicle.nomcicle }}
             </option>
           </select>
         </div>
+        <div class="col-lg-6 col-sm-12 ">
+          <div class="form-check form-switch">
+            <label class="form-check-label" for="flexSwitchCheckChecked">Estat</label>
+            <input v-model="oferta.estat" class="form-check-input" type="checkbox" role="switch"
+              id="flexSwitchCheckChecked" checked>
+          </div>
+        </div>
         <!-- Agrega más campos según tus necesidades -->
       </div>
-
 
       <!-- Agrega más campos según tus necesidades -->
 
@@ -61,14 +67,13 @@
     <div v-if="afegit_error" class="alert alert-danger">Errada afegint oferta</div>
   </div>
 </template>
-  
+
 <script>
 import Swal from 'sweetalert2';
 
 export default {
   name: "OfertaFormulari",
   props: {
-    //msg: String
     base_url: String,
   },
   data() {
@@ -85,9 +90,7 @@ export default {
         urloferta: "",
         cicles: [1, 2],
       },
-      cicles: [
-
-      ],
+      cicles: [],
       selectedCicles: [],
       selectedEmpresa: "",
       llistaEmpreses: [],
@@ -99,10 +102,12 @@ export default {
     async getCicles() {
       let url = this.base_url + "/api/cicle/";
       try {
-        const response = await fetch(url, {headers: {
+        const response = await fetch(url, {
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
-          }});
+          }
+        });
         this.resposta = await response.json();
         this.cicles = this.resposta.cicles;
         await console.log(this.cicles);
@@ -116,10 +121,12 @@ export default {
     async getEmpreses() {
       let url = this.base_url + "/api/empresa/";
       try {
-        const response = await fetch(url, {headers: {
+        const response = await fetch(url, {
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
-          }});
+          }
+        });
         this.resposta = await response.json();
         this.llistaEmpreses = this.resposta.empreses;
         this.llistaEmpreses.sort(function (a, b) {
@@ -140,9 +147,7 @@ export default {
       }
     },
     async postOferta() {
-      // Verifica si el idsector está presente
       if (!this.oferta.empresa) {
-        //alert("Obligatori triar empresa...");
         Swal.fire({
           icon: 'error',
           title: 'Obligatori triar empresa...',
@@ -154,10 +159,6 @@ export default {
       this.afegit_error = false;
       let url = this.base_url + "/api/oferta/";
       try {
-        // Asigna directamente el valor de nomsector desde novaEmpresa
-        //const selectedSector = this.sectors.find(sector => sector.id === parseInt(this.novaEmpresa.idsector));
-        //this.novaEmpresa.nomsector = selectedSector ? selectedSector.nomsector : '';
-
         await console.log(JSON.stringify(this.oferta));
         const response = await fetch(url, {
           method: "POST",
@@ -168,8 +169,7 @@ export default {
           },
         });
         const resposta = await response.json();
-        if(resposta.ok){
-          //alert("Oferta afegida correctament");
+        if (resposta.ok) {
           Swal.fire({
             icon: 'success',
             title: 'Oferta afegida correctament',
@@ -177,8 +177,7 @@ export default {
           });
           this.afegit_ok = true;
         }
-        else{
-          //alert("La resposta del servidor és: " + resposta.error);
+        else {
           Swal.fire({
             icon: 'error',
             title: 'Error en enviar dades al servidor',
@@ -186,10 +185,7 @@ export default {
           });
           this.afegit_error = true;
         }
-        //this.enviament_ok = await this.resposta.ok;
-        //await alert("La resposta del servidor és: " + this.resposta.error);
       } catch (error) {
-        //alert("Error en enviar dades al servidor: " + error);
         Swal.fire({
           icon: 'error',
           title: 'Error en enviar dades al servidor',
@@ -199,7 +195,6 @@ export default {
         console.error(error);
       }
 
-      // Restablecer el formulario después de enviar
       this.resetForm();
     },
     resetForm() {
@@ -224,8 +219,16 @@ export default {
   }
 };
 </script>
-  
+
 <style scoped>
 /* Puedes agregar estilos específicos aquí si es necesario */
+.form-check-inline {
+  display: flex;
+  align-items: center;
+}
+
+.form-check-label {
+  margin-right: 1px;
+  /* Ajusta este valor según sea necesario */
+}
 </style>
-  

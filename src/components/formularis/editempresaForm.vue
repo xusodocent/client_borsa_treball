@@ -119,9 +119,10 @@ export default {
           Swal.fire({
                         icon: 'success',
                         title: 'Empresa guardada correctament',
-                        showConfirmButton: false,
+                        showConfirmButton: true,
                         timer: 2000
                     });
+          this.$router.push('/empreses');
         }else {
           Swal.fire({
                         icon: 'error',

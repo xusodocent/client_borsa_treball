@@ -194,7 +194,7 @@ export default {
                 console.log("La respuesta del servidor es:" + JSON.stringify(this.resposta));
 
                 Swal.fire({
-                    title: 'Contacte modificat correctament',
+                    title: 'Alumne modificat correctament',
                     icon: 'success',
                     confirmButtonText: 'D\'acord'
                 });

@@ -2,7 +2,18 @@
   <h1 class="text-center fw-bold text-primary">Ofertes</h1>
   <hr>
   <br>
-  <input type="text" v-model="filtro" placeholder="Buscar per empresa..." />
+  <div class="row align-items-start">
+    <div class="col-lg-6 col-sm-12">
+      <input type="text" v-model="filtro" placeholder="Buscar per empresa..." />
+    </div>
+    <div class="col-lg-4 col-sm-12">
+      <select class="form-select" id="filtreEstat" v-model="filtreEstat">
+        <option value="totes">Totes</option>
+        <option value="true">Actives</option>
+        <option value="false">Inactives</option>
+      </select>
+    </div>
+  </div>
   <div class="container">
     <br>
     <button class="btn btn-dark" @click="this.$router.push('/novaoferta')">
@@ -23,39 +34,34 @@
           <tr v-for="oferta in ofertesFiltrades" :key="oferta.id">
             <td>{{ oferta.empresa.nomempresa }}</td>
             <td>{{ oferta.data }}</td>
-            <td>{{ oferta.estat }}</td>
+            <td>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="ledSwitch" v-model="oferta.estat" disabled>
+                <label class="form-check-label" for="ledSwitch">
+                  {{ oferta.estat ? 'Activa' : 'Inactiva' }}
+                </label>
+              </div>
+            </td>
             <td><a :href="oferta.urloferta">{{ oferta.urloferta }}</a></td>
             <td>
-              <button
-                type="button"
-                class="btn btn-outline-success"
-                @click="
-                  this.$router.push({
-                    path: `/ofertafitxa/${oferta.id}`,
-                    params: { id: oferta.id },
-                  })
-                "
-              >
+              <button type="button" class="btn btn-outline-success" @click="
+                this.$router.push({
+                  path: `/ofertafitxa/${oferta.id}`,
+                  params: { id: oferta.id },
+                })
+              ">
                 <i class="fa-regular fa-eye"></i>
                 Veure
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger"
-                @click="confirmDelete(oferta.id)"
-              >
+              <button type="button" class="btn btn-outline-danger" @click="confirmDelete(oferta.id)">
                 <i class="fa-regular fa-trash-can"></i>Eliminar
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-info"
-                @click="
-                  this.$router.push({
-                    path: `/editaoferta/${oferta.id}`,
-                    params: { id: oferta.id },
-                  })
-                "
-              >
+              <button type="button" class="btn btn-outline-info" @click="
+                this.$router.push({
+                  path: `/editaoferta/${oferta.id}`,
+                  params: { id: oferta.id },
+                })
+              ">
                 <i class="fa-solid fa-file-pen"></i>
                 Modificar
               </button>
@@ -79,6 +85,7 @@ export default {
     return {
       token: "",
       filtro: "", //es gasta per a filtrar ofertes
+      filtreEstat: "totes", // filtro por estado
       ofertes: [],
       ofertes2: [
         {
@@ -174,7 +181,9 @@ export default {
   computed: {
     ofertesFiltrades() {
       return this.ofertes.filter(item => {
-        return item.empresa.nomempresa.toLowerCase().includes(this.filtro.toLowerCase());
+        const byEmpresa = item.empresa.nomempresa.toLowerCase().includes(this.filtro.toLowerCase());
+        const byEstat = this.filtreEstat === "totes" || item.estat.toString() === this.filtreEstat;
+        return byEmpresa && byEstat;
       });
     },
   }
@@ -183,3 +192,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>
+

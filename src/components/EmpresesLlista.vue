@@ -6,6 +6,7 @@
     <div class="d-flex align-items-center mb-3">
       <input type="text" v-model="filtro" placeholder="Buscar per empresa..." id="buscarEmpresa" class="form-control me-2"/>
       <input type="text" v-model="filtroPoble" placeholder="Buscar per poble..." id="buscarPoble" class="form-control me-2"/>
+      <input type="text" v-model="filtroSector" placeholder="Buscar per sector..." id="buscarSector" class="form-control me-2"/>
       <button class="btn btn-dark" @click="generatePDF">
         <i class="fa-solid fa-file-pdf"></i> Generar PDF
       </button>
@@ -82,6 +83,7 @@ export default {
       resposta: "",
       filtro: "",
       filtroPoble: "",
+      filtroSector: "", // Añadido filtro por sector
       empreses: [],
     };
   },
@@ -180,7 +182,9 @@ export default {
   computed: {
     empresesFiltrades() {
       return this.empreses.filter(item => {
-        return item.nom.toLowerCase().includes(this.filtro.toLowerCase()) && item.poblacio.toLowerCase().includes(this.filtroPoble.toLowerCase());
+        return item.nom.toLowerCase().includes(this.filtro.toLowerCase()) &&
+               item.poblacio.toLowerCase().includes(this.filtroPoble.toLowerCase()) &&
+               item.nomsector.toLowerCase().includes(this.filtroSector.toLowerCase());
       });
     },
   }
