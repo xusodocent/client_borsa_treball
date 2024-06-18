@@ -5,7 +5,7 @@
       <div class="row align-items-start">
         <div class="col-lg-6 col-sm-12">
           <label for="empresa" class="form-label">Empresa</label>
-          <select class="form-select" id="empresa" required v-model="oferta.empresa.NIF">
+          <select class="form-select" id="empresa" required v-model="oferta.empresa.nifempresa">
             <option value="" disabled>Selecciona una</option>
             <option :value="empresa.NIF" v-for="empresa in llistaEmpreses" :key="empresa.NIF">{{ empresa.nom }}</option>
           </select>
@@ -36,7 +36,7 @@
         </div>
         <div class="col-lg-6 col-sm-12">
           <label for="cicles" class="form-label">Cicles</label>
-          <select multiple class="form-select" id="cicles" v-model="selectedCicles" required>
+          <select multiple class="form-select" id="cicles" v-model="this.oferta.cicles" required>
             <option value="" disabled>Selecciona diversos cicles amb Ctrl</option>
             <option :value="cicle.id" v-for="cicle in cicles" :key="cicle.id">{{ cicle.nomcicle }}</option>
           </select>
@@ -65,6 +65,8 @@ export default {
       token: "",
       oferta: {
         empresa: { NIF: "" },
+        nifempresa: "",
+        nif: "aaaa",
         data: "",
         estat: true,
         textoferta: "",
@@ -82,6 +84,19 @@ export default {
     };
   },
   methods: {
+    convertToISODate(dateStr) {
+      const [day, month, year] = dateStr.split('/');
+      return `${year}-${month}-${day}`;
+    },
+    eliminarNomIGrauCicle(json) {
+      if (json.cicles && Array.isArray(json.cicles)) {
+        json.cicles.forEach(cicle => {
+          delete cicle.nomcicle;
+          delete cicle.graucicle;
+        });
+      }
+      return json;
+    },
     async getOferta() {
       let url = this.base_url + "/api/oferta/" + this.$route.params.id;
       try {
@@ -93,9 +108,20 @@ export default {
         });
         const data = await response.json();
         this.oferta = data.oferta;
+        alert("Oferta: " + JSON.stringify(this.oferta));
         this.selectedCicles = this.oferta.cicles;
+        //this.preseleccionarEmpresa(); // Preselecciona la empresa una vez cargada la oferta
+        this.oferta.cicles = this.oferta.cicles.map(cicle => cicle.id) || [];
+        this.oferta.data = this.convertToISODate(this.oferta.data);
+        this.oferta.empresa.NIF = this.oferta.nifempresa;
+        this.oferta.nif = this.oferta.empresa.NIF;
       } catch (error) {
         console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en carregar oferta'
+        });
       }
     },
     async getCicles() {
@@ -111,6 +137,11 @@ export default {
         this.cicles = data.cicles;
       } catch (error) {
         console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en carregar cicles'
+        });
       }
     },
     async getEmpreses() {
@@ -123,14 +154,32 @@ export default {
           }
         });
         const data = await response.json();
+        console.log("Empreses: " + JSON.stringify(data.empreses));
         this.llistaEmpreses = data.empreses;
+        //this.preseleccionarEmpresa(); // Preselecciona la empresa una vez cargadas las empresas
+        alert("Empreses: " + JSON.stringify(this.llistaEmpreses));
       } catch (error) {
         console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en carregar empreses'
+        });
+      }
+    },
+    preseleccionarEmpresa() {
+      if (this.oferta.nifempresa && this.llistaEmpreses.length > 0) {
+        const empresaSeleccionada = this.llistaEmpreses.find(empresa => empresa.NIF === this.oferta.empresa.NIF);
+        if (empresaSeleccionada) {
+          this.oferta.empresa.NIF = empresaSeleccionada.NIF;
+        }
       }
     },
     async updateOferta() {
-      if (!this.oferta.empresa.NIF) {
-        //alert("Cal seleccionar una empresa...");
+      //this.oferta.nif = this.oferta.empresa.NIF;
+      this.oferta = this.eliminarNomIGrauCicle(this.oferta);
+      alert("Oferta: " + JSON.stringify(this.oferta));
+      if (!this.oferta.empresa.nifempresa) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -142,7 +191,6 @@ export default {
       this.afegit_error = false;
       let url = this.base_url + "/api/oferta/" + this.$route.params.id;
       try {
-        console.log("Enviant oferta" + JSON.stringify(this.oferta));
         const response = await fetch(url, {
           method: "PUT",
           body: JSON.stringify(this.oferta),
@@ -153,10 +201,13 @@ export default {
         });
         const resposta = await response.json();
         if (resposta.ok) {
-          alert("Oferta actualitzada correctament");
+          Swal.fire({
+            icon: 'success',
+            title: 'Oferta actualitzada correctament',
+            showConfirmButton: true,
+          });
           this.afegit_ok = true;
         } else {
-          //alert("La resposta del servidor és: " + resposta.error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -166,16 +217,21 @@ export default {
         }
       } catch (error) {
         console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en afegir oferta'
+        });
         this.afegit_error = true;
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.token = localStorage.getItem("jwtToken");
-    this.getOferta().then(() => {
-      this.getEmpreses();
-      this.getCicles();
-    });
+    await this.getEmpreses();
+    await this.getCicles();
+    await this.getOferta();
+    //await this.preseleccionarEmpresa();
   },
 };
 </script>

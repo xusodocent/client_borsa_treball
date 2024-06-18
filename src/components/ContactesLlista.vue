@@ -14,10 +14,10 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th style="width: 30%;">Nom</th>
-            <th style="width: 20%;">Empresa</th>
-            <th style="width: 20%;">Correu</th>
-            <th style="width: 30%;">Accions</th>
+            <th style="width: 25%;">Nom</th>
+            <th style="width: 15%;">Empresa</th>
+            <th style="width: 15%;">Correu</th>
+            <th style="width: 40%;">Accions</th>
           </tr>
         </thead>
         <tbody>

@@ -21,10 +21,10 @@
         <thead>
           <tr>
             <th style="width: 25%;">Nom</th>
-            <th style="width: 15%;">Població</th>
-            <th style="width: 15%;">Sector</th>
-            <th style="width: 15%;">Telèfon</th>
-            <th style="width: 30%;" class="action-column">Accions</th>
+            <th style="width: 12%;">Població</th>
+            <th style="width: 12%;">Sector</th>
+            <th style="width: 12%;">Telèfon</th>
+            <th style="width: 39%;" class="action-column">Accions</th>
           </tr>
         </thead>
         <tbody>

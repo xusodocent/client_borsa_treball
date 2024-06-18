@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: "SectorFormulari",
   props: {
@@ -65,16 +67,33 @@ export default {
         console.log(resposta);
         //this.enviament_ok = resposta.ok;
         if (resposta.ok) {
-          alert("Sector afegit correctament");
+          //alert("Sector afegit correctament");
+          Swal.fire({
+            title: 'Sector afegit correctament',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
           this.afegit_ok = true;
         }
         else {
-          alert("La resposta del servidor és: " + resposta.error);
+          //alert("La resposta del servidor és: " + resposta.error);
+          Swal.fire({
+            title: 'Error afegint sector',
+            text: resposta.error,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
           this.afegit_error = true;
         }
 
       } catch (error) {
-        alert("Error afegint sector");
+        //alert("Error afegint sector");
+        Swal.fire({
+          title: 'Error afegint sector',
+          text: error,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
         this.afegit_error = true;
         console.error(error);
       }
