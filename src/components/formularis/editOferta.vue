@@ -66,7 +66,7 @@ export default {
       oferta: {
         empresa: { NIF: "" },
         nifempresa: "",
-        nif: "aaaa",
+        nif: "",
         data: "",
         estat: true,
         textoferta: "",
@@ -84,6 +84,22 @@ export default {
     };
   },
   methods: {
+    transformarOferta(ofertaRebuda) {
+      const ofertaTransformada = {
+        nifempresa: ofertaRebuda.nifempresa,
+        nif: ofertaRebuda.empresa.NIF,
+        data: ofertaRebuda.data,
+        estat: ofertaRebuda.estat,
+        textoferta: ofertaRebuda.textoferta,
+        experiencia: ofertaRebuda.experiencia,
+        idiomes: ofertaRebuda.idiomes,
+        altres: ofertaRebuda.altres,
+        urloferta: ofertaRebuda.urloferta,
+        cicles: ofertaRebuda.cicles
+      };
+
+      return ofertaTransformada;
+    },
     convertToISODate(dateStr) {
       const [day, month, year] = dateStr.split('/');
       return `${year}-${month}-${day}`;
@@ -108,13 +124,16 @@ export default {
         });
         const data = await response.json();
         this.oferta = data.oferta;
-        alert("Oferta: " + JSON.stringify(this.oferta));
+        //alert("Oferta: " + JSON.stringify(this.oferta));
         this.selectedCicles = this.oferta.cicles;
+        this.oferta.empresa.NIF = this.oferta.nifempresa;
+        //this.oferta.nif = this.oferta.empresa.NIF;
         //this.preseleccionarEmpresa(); // Preselecciona la empresa una vez cargada la oferta
         this.oferta.cicles = this.oferta.cicles.map(cicle => cicle.id) || [];
         this.oferta.data = this.convertToISODate(this.oferta.data);
-        this.oferta.empresa.NIF = this.oferta.nifempresa;
-        this.oferta.nif = this.oferta.empresa.NIF;
+
+
+        //alert("Oferta que carregue: " + JSON.stringify(this.oferta));
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -157,7 +176,7 @@ export default {
         console.log("Empreses: " + JSON.stringify(data.empreses));
         this.llistaEmpreses = data.empreses;
         //this.preseleccionarEmpresa(); // Preselecciona la empresa una vez cargadas las empresas
-        alert("Empreses: " + JSON.stringify(this.llistaEmpreses));
+        //alert("Empreses: " + JSON.stringify(this.llistaEmpreses));
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -176,9 +195,19 @@ export default {
       }
     },
     async updateOferta() {
-      //this.oferta.nif = this.oferta.empresa.NIF;
       this.oferta = this.eliminarNomIGrauCicle(this.oferta);
-      alert("Oferta: " + JSON.stringify(this.oferta));
+      if (this.oferta.empresa) {
+        this.oferta.nif = this.oferta.empresa.nifempresa;
+        //alert("Oferta.nif: " + this.oferta.nif);
+      }else{
+        //alert("No hi ha empresa");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en seleccionar una empresa...'
+        });
+      }
+      //alert("Oferta: " + JSON.stringify(this.oferta));
       if (!this.oferta.empresa.nifempresa) {
         Swal.fire({
           icon: 'error',
