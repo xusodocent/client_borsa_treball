@@ -236,6 +236,7 @@ export default {
             showConfirmButton: true,
           });
           this.afegit_ok = true;
+          this.$router.push("/ofertes");
         } else {
           Swal.fire({
             icon: 'error',

@@ -25,8 +25,6 @@
     <button class="btn btn-dark" @click="this.$router.push('/nousector')">
       <i class="fa-solid fa-plus"></i>Nou sector
     </button>
-    <div v-if="eliminat_ok" class="alert alert-success">S'ha eliminat correctament el sector</div>
-    <div v-if="eliminat_error" class="alert alert-danger">Errada eliminant sectors</div>
   </div>
 </template>
 

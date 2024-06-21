@@ -85,6 +85,7 @@ export default {
             title: 'Cicle afegit',
             text: 'El cicle s\'ha afegit correctament.',
           });
+          this.$router.push('/cicles');
         } else {
           Swal.fire({
             icon: 'error',

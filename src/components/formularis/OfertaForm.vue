@@ -173,9 +173,11 @@ export default {
           Swal.fire({
             icon: 'success',
             title: 'Oferta afegida correctament',
-            text: "La resposta del esrvidor és:" + resposta.ok
+            text: "La resposta del esrvidor és:" + resposta.ok,
+            showConfirmButton: true,
           });
           this.afegit_ok = true;
+          this.$router.push("/ofertes");
         }
         else {
           Swal.fire({

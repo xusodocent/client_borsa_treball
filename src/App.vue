@@ -19,7 +19,7 @@ export default {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'La sessió ha expirat.'
+        text: 'La sessió ha expirat o no hi ha autentificació.'
       });
       authService.logout();
       this.$router.push({ name: 'login' });

@@ -198,6 +198,7 @@ export default {
                     icon: 'success',
                     confirmButtonText: 'D\'acord'
                 });
+                this.$router.push('/alumnes');
             } catch (error) {
                 console.error(error);
                 Swal.fire({

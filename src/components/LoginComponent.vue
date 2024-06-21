@@ -106,7 +106,12 @@ export default {
         this.$router.push({ name: 'home' });
       } catch (error) {
         console.error('Error:', error);
-        alert('Login failed: ' + error.message);
+        //alert('Login failed: ' + error.message);
+        Swal.fire({
+                    icon: 'error',
+                    title: 'Error intentant autenticar-se!',
+                    text: 'Error al realitzar la sol·licitud.' + error.message
+                });
       }
     },
   },

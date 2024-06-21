@@ -74,6 +74,7 @@ export default {
             confirmButtonText: 'OK'
           });
           this.afegit_ok = true;
+          this.$router.push("/sectors");
         }
         else {
           //alert("La resposta del servidor és: " + resposta.error);
