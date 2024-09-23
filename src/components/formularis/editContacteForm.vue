@@ -109,7 +109,7 @@
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Error al guardar el contacte: ' + resposta.error
+              text: 'Error al guardar el contacte: ' + resposta.error,
             });
           }
         } catch (error) {

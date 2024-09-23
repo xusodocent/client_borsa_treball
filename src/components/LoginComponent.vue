@@ -69,8 +69,10 @@ export default {
       try {
         const response = await fetch(url, {
           method: 'POST',
+          //mode: 'no-cors' ,
           headers: {
             'Content-Type': 'application/json',
+            //'Access-Control-Allow-Origin': 'http://borsa.ieseljust.com/backend' // Afegeix el teu domini
           },
           body: JSON.stringify({
             email: this.email,
