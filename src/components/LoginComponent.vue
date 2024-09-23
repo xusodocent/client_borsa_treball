@@ -16,6 +16,7 @@
               </div>
               <br>
               <button type="submit" class="btn btn-primary btn-block">Login</button>
+              <button class="btn btn-info" @click="$router.push('/register')">Registrar</button>
             </form>
           </div>
         </div>
