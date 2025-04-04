@@ -4,7 +4,7 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h2 class="card-title text-center">Login</h2>
+            <h2 class="card-title text-center">Autenticar-se</h2>
             <form @submit.prevent="login">
               <div class="form-group">
                 <label for="username">Usuari:</label>

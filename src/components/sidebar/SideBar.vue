@@ -35,7 +35,7 @@ export default {
     <br>
     <br>
     <div v-if="!collapsed">
-      <img src="../../assets/logoIESJaumeIIElJust.png" alt="" width="100%">
+      <img src="../../assets/logo_eljust2.jpeg" alt="" width="100%">
     </div>
   </div>
   <hr>
