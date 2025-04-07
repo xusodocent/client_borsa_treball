@@ -29,9 +29,13 @@ import EditaAlumne from '../components/formularis/editAlumneForm.vue'
 import EditaContacte from '../components/formularis/editContacteForm.vue'
 import EditaOferta from '../components/formularis/editOferta.vue'
 
+import OfertesPublicades from '@/components/ofertesPublicades.vue'
+
+
 //import VorePdf from '../components/VorePdf.vue';
 
 import authService from '../services/authService';
+//import OfertesPublicades from '@/components/ofertesPublicades.vue'
 
 
 const routes = [
@@ -166,6 +170,15 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: OfertaForm,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/ofertespublicades',
+    name: 'ofertespublicades',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: OfertesPublicades,
     meta: { requiresAuth: true }
   },
   {

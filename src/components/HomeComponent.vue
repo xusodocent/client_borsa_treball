@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tr>
-        <td>Màquina virtual</td>
+        <td>VPS</td>
         <td>{{ base_url }}</td>
       </tr>
     </table>

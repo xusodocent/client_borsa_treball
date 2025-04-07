@@ -28,6 +28,7 @@ export default {
     <SidebarLink to="/cicles" icon="fa-regular fa-rectangle-list">Cicles</SidebarLink>
     <SidebarLink to="/alumnes" icon="fa-solid fa-graduation-cap">Alumnat</SidebarLink>
     <SidebarLink to="/ofertes" icon="fa-solid fa-list">Ofertes</SidebarLink>
+    <SidebarLink to="/ofertespublicades" icon="fa fa-globe">Web Pública</SidebarLink>
 
     <span class="collapse-icon" :class="{ 'rotate-180': collapsed }" @click="toggleSidebar">
       <i class="fas fa-angle-double-left" />

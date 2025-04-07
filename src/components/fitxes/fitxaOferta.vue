@@ -37,7 +37,7 @@
                 </tr>
                 <tr>
                     <td class="negreta">Enllaç</td>
-                    <td><a :href="oferta.urloferta" target="_blank">Enllaç</a></td>
+                    <td><a :href="oferta.urloferta" target="_blank">{{ oferta.urloferta }}</a></td>
                 </tr>
                 <tr>
                     <td class="negreta">Cicles</td>
@@ -52,14 +52,23 @@
             </tbody>
         </table>
 
+        <!-- Codi QR de l'enllaç de l'oferta -->
+        <h3 class="text-center mt-5">Codi QR de l'oferta</h3>
+        <qrcode-vue :value="oferta.urloferta" :size="200" class="mx-auto d-block"/>
+        <br>
+        <br>
     </div>
 </template>
 
 <script>
+import QrcodeVue from 'qrcode.vue';
+
 export default {
     name: "OfertaFitxa",
+    components: {
+        QrcodeVue
+    },
     props: {
-        //msg: String
         base_url: String,
     },
     data() {
@@ -90,7 +99,7 @@ export default {
                         "graucicle": "S"
                     }
                 ]
-                },
+            },
             validat: false,
             enviat: false,
         };
