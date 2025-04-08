@@ -1,63 +1,71 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <h1 class="text-center fw-bold text-primary">Dades de: {{ empresa.nom }}</h1>
+    <h1 class="text-center fw-bold text-primary">{{ empresa.nom }}</h1>
     <br />
     <div id="tabla-personas">
       <table class="table table-striped">
         <tbody>
-            <tr class="odd-row">
-          <th>NIF</th>
-          <td>{{ empresa.NIF }}</td>
-        </tr>
-        <tr>
-          <th>Nom</th>
-          <td>{{ empresa.nom }}</td>
-        </tr>
-        <tr class="odd-row">
-          <th>Domicili</th>
-          <td>{{ empresa.domicili }}</td>
-        </tr>
-        <tr>
-          <th>Població</th>
-          <td>{{ empresa.poblacio }}</td>
-        </tr>
-        <tr class="odd-row">
-          <th>Codi Postal</th>
-          <td>{{ empresa.cpostal }}</td>
-        </tr>
-        <tr>
-          <th>Telèfon</th>
-          <td>{{ empresa.telefon }}</td>
-        </tr>
-        <tr class="odd-row">
-          <th>e-mail</th>
-          <td>{{ empresa.email }}</td>
-        </tr>
-        <tr>
-          <th>Web</th>
-          <td>{{ empresa.web }}</td>
-        </tr>
-        <tr class="odd-row">
-          <th>Sector</th>
-          <td>{{ empresa.nomsector }}</td>
-        </tr>
+          <tr class="odd-row">
+            <th>NIF</th>
+            <td>{{ empresa.NIF }}</td>
+          </tr>
+          <tr>
+            <th>Nom</th>
+            <td>{{ empresa.nom }}</td>
+          </tr>
+          <tr class="odd-row">
+            <th>Domicili</th>
+            <td>{{ empresa.domicili }}</td>
+          </tr>
+          <tr>
+            <th>Població</th>
+            <td>{{ empresa.poblacio }}</td>
+          </tr>
+          <tr class="odd-row">
+            <th>Codi Postal</th>
+            <td>{{ empresa.cpostal }}</td>
+          </tr>
+          <tr>
+            <th>Telèfon</th>
+            <td>{{ empresa.telefon }}</td>
+          </tr>
+          <tr class="odd-row">
+            <th>e-mail</th>
+            <td>{{ empresa.email }}</td>
+          </tr>
+          <tr>
+            <th>Web</th>
+            <td>{{ empresa.web }}</td>
+          </tr>
+          <tr class="odd-row">
+            <th>Sector</th>
+            <td>{{ empresa.nomsector }}</td>
+          </tr>
         </tbody>
       </table>
     </div>
-    <button
-                type="button"
-                class="btn btn-outline-info"
-                @click="this.$router.push({ path: `/editaempresa/${empresa.NIF}`, params: { nif: empresa.NIF } })"
-              >
-                <i class="fa-solid fa-file-pen"></i> Modificar
-              </button>
+    <button type="button" class="btn btn-outline-info"
+      @click="this.$router.push({ path: `/editaempresa/${empresa.NIF}`, params: { nif: empresa.NIF } })">
+      <i class="fa-solid fa-file-pen"></i> Modificar
+    </button>
+    <!-- Codi QR de l'enllaç de l'oferta -->
+    <h3 class="text-center mt-5">Codi QR de l'empresa</h3>
+    <qrcode-vue :value="empresa.web" :size="200" class="mx-auto d-block" />
+    <br>
+    <br>
   </div>
 </template>
 
 <script>
+
+import QrcodeVue from 'qrcode.vue';
+
 export default {
   name: "EmpresaFitxa",
+  components: {
+        QrcodeVue
+    },
   props: {
     //msg: String
     base_url: String,
@@ -87,12 +95,12 @@ export default {
       try {
         console.log("la ruta és" + this.$route.params.nif);
         const response = await fetch(
-          url + this.$route.params.nif, 
+          url + this.$route.params.nif,
           {
             headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`
-          }
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.token}`
+            }
           }
         );
         this.resposta = await response.json();
